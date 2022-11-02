@@ -1,7 +1,7 @@
-takenote=~/dev/take-note/takenote/main.py
+takenote=~/dev/take-note/takenote
 
-python $takenote -t "title test" -- "This is a note"
+python -m $takenote -t "title test" -- "This is a note"
 
-python $takenote "This is a note has no title"
+python -m $takenote "This is a note has no title"
 
-python $takenote -t "Multiline note"
+python -m $takenote -t "Multiline note"

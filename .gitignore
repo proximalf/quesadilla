@@ -4,6 +4,7 @@ __pycache__/
 *.pyc
 *.egg-info/
 .ruff_cache
+dist
 
 # Ignore dynaconf secret files
 .secrets.*

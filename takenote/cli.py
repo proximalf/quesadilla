@@ -48,7 +48,3 @@ def cli(note: str, title: str) -> None:
 
     except Exception as e:
         click.secho(f"Error occured:\n{e}", fg="red")
-
-
-if __name__ == "__main__":
-    cli()
