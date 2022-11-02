@@ -41,10 +41,12 @@ def cli(note: str, title: str) -> None:
         if note is None:
             note = click.edit()
 
-        with file_path.open("w") as file:
-            file.write(note)
-
-        click.secho("Note saved successfully!", fg="green")
+        if note is not None:
+            with file_path.open("w") as file:
+                file.write(note)
+            click.secho("Note saved successfully!", fg="green")
+        else:
+            click.echo("No note saved!")
 
     except Exception as e:
         click.secho(f"Error occured:\n{e}", fg="red")
