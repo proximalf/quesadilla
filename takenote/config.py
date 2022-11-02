@@ -14,7 +14,7 @@ settings = Dynaconf(
 
 def create_config_file() -> None:
     """
-    Creates a config file if it does not currently exist. Fle is in .toml format
+    Creates a config file if it does not currently exist.
     """
     if not USER_CONFIG_FILE.exists():
         USER_CONFIG_FILE.parent.mkdir(parents=True, exist_ok=True)
