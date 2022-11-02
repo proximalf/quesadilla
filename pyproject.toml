@@ -1,6 +1,10 @@
-[project]
-name = "take-note"
-keywords = ["notes", "terminal", "python"]
+[tool.poetry]
+name = "takenote"
+version = "0.0.1"
+description = "Note taking terminal app, for integration with obsidian."
+authors = ["proximalf <proximalfuture@gmail.com>"]
+license = "MIT"
+readme = "readme.md"
 classifiers = [
     "Environment :: Console",
     "Intended Audience :: Developers",
@@ -10,24 +14,29 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3 :: Only",
 ]
-author = "proximalf"
-author_email = "proximalfuture@gmail.com"
-description = "Note taking terminal app, for integration with obsidian."
-requires-python = ">=3.9"
+packages = [
+    { include = "takenote" }
+]
 
-[project.urls]
+[tool.poetry.urls]
 repository = "https://github.com/proximalf/ubiquitous-octo-disco"
 
+[tool.poetry.dependencies]
+python = "^3.10"
+click = "^8.1.3"
+
 [build-system]
-requires = ["setuptools ~= 58.0", "cython ~= 0.29.0"]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
 
 [tool.ruff]
 line-length = 120
-select = ["E", "F"]
+#select = ["E", "F"]
 ignore = [
 
     ]
 per-file-ignores = [
     "__init__.py:F401",
-    "path/to/file.py:F401"
+    #"path/to/file.py:F401"
 ]

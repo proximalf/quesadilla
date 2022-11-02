@@ -1,7 +1,7 @@
 from pathlib import Path
 import click
-from config import create_config_file, settings
-from lib import zettelkasten
+from takenote.config import create_config_file, settings
+from takenote.lib import zettelkasten
 
 
 @click.command()
