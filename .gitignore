@@ -3,3 +3,8 @@
 __pycache__/
 *.pyc
 *.egg-info/
+.ruff_cache
+
+# Ignore dynaconf secret files
+.secrets.*
+settings.toml
