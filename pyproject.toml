@@ -24,7 +24,9 @@ requires = ["setuptools ~= 58.0", "cython ~= 0.29.0"]
 [tool.ruff]
 line-length = 120
 select = ["E", "F"]
-ignore = ["E501"]
+ignore = [
+
+    ]
 per-file-ignores = [
     "__init__.py:F401",
     "path/to/file.py:F401"
