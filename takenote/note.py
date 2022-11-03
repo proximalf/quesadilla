@@ -3,9 +3,9 @@ from typing import Optional
 from takenote.lib import zettelkasten
 
 
-def create_note(dirpath: Path, note: str, title: Optional[str] = None) -> None:
+def create_note(dirpath: Path, note: str, title: Optional[str] = None) -> Path:
     """
-    Create a note.
+    Create a note. Overwrites any note.
 
     Parameters
     ----------
@@ -32,3 +32,18 @@ def create_note(dirpath: Path, note: str, title: Optional[str] = None) -> None:
         file.write(note)
 
     return filepath
+
+
+def append_to_note(filepath: Path, note) -> None:
+    """
+    Append to note.
+
+    Parameters
+    ----------
+    filepath
+        Filepath the note is saved to.
+    note: str
+        Note string.
+    """
+    with filepath.open("a") as file:
+        file.write(note)

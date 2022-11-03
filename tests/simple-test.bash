@@ -1,7 +1,11 @@
-# takenote=~/dev/take-note/takenote
-takenote=takenote
-python -m $takenote -t "title test" -- "This is a note"
+# tn=~/dev/take-note/takenote
+tn=takenote
+python -m $tn --title "test note" -- "This is a note"
 
-python -m $takenote "This is a note has no title"
+python -m $tn "This is a note has no title"
 
-python -m $takenote -t "Multiline note"
+python -m $tn --title "test - multiline note"
+
+python -m $tn --append "TEST" -- "append note"
+
+python -m $tn --append "test2" -- "append note2"
