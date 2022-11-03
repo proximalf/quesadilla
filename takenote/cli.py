@@ -1,8 +1,11 @@
 from pathlib import Path
 from typing import Any, Dict
 import click
-from takenote.config import create_config_file, settings
+from takenote.config import config_file
 from takenote.note import append_to_note, create_note
+
+CONFIG_FILE_NAME = "tn-config.toml"
+GLOBAL_CONFIG_FILE = Path(f"~/.config/{CONFIG_FILE_NAME}").expanduser()
 
 
 def new_note(settings: Dict[str, Any], note: str, title: str = None) -> None:
@@ -27,7 +30,7 @@ def append_note(settings: Dict[str, Any], key: str, note: str) -> None:
     "title",
     type=str,
     default=None,
-    help="Sets the filename of a note.",
+    help="Sets the filename of a note. Saves as per definition in config file.",
 )
 @click.option(
     "-a",
@@ -35,16 +38,13 @@ def append_note(settings: Dict[str, Any], key: str, note: str) -> None:
     "append_key",
     type=str,
     default=None,
-    help="Sets the filename of a note.",
+    help="Use a key as defined by APPEND_NOTES in the tn-config file.",
 )
-def cli(
-    note: str,
-    title: str = None,
-    append_key: str = None,
-) -> None:
+@click.option("--generate-config", is_flag=True, default=False, help="Use to generate a local config file.")
+def cli(note: str, title: str = None, append_key: str = None, generate_config: bool = False) -> None:
     """
     The note has to be wrapped in quotes for single line.
-
+    \b
     Example
     ----------
     tn -t "Title" -- "Note"
@@ -53,8 +53,18 @@ def cli(
     """
     click.secho("Take note!", fg="magenta")
     try:
-        # Generate settings
-        create_config_file()
+        # Generate settings, check for local
+        local_config = Path().cwd() / CONFIG_FILE_NAME
+
+        if local_config.exists():
+            config_path = local_config
+        else:
+            config_path = GLOBAL_CONFIG_FILE
+            click.echo("Using global settings")
+
+        settings = config_file(config_path, generate_config)
+        if generate_config:
+            return 0
 
         if note is None:
             note = click.edit()
@@ -66,6 +76,6 @@ def cli(
                 append_note(settings, append_key, note)
             else:
                 new_note(settings, note, title)
-
+        return 0
     except Exception as e:
         click.secho(f"Error occured:\n{e}", fg="red")

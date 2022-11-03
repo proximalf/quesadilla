@@ -1,5 +1,8 @@
 # tn=~/dev/take-note/takenote
 tn=takenote
+
+rm dirty/test-output/*
+
 python -m $tn --title "test note" -- "This is a note"
 
 python -m $tn "This is a note has no title"
