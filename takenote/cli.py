@@ -1,7 +1,7 @@
 from pathlib import Path
 import click
 from takenote.config import create_config_file, settings
-from takenote.lib import zettelkasten
+from takenote.note import create_note
 
 
 @click.command()
@@ -30,20 +30,11 @@ def cli(note: str, title: str) -> None:
         create_config_file()
         output_dir = Path(settings["save_path_notes"])
 
-        if title is not None:
-            file_path = output_dir / title
-        else:
-            # Can't save a file without a title/filepath.
-            zettel = zettelkasten()
-            click.echo(f"no title provided, saved under {zettel} instead")
-            file_path = output_dir / zettel
-
         if note is None:
             note = click.edit()
 
         if note is not None:
-            with file_path.open("w") as file:
-                file.write(note)
+            create_note(output_dir, note)
             click.secho("Note saved successfully!", fg="green")
         else:
             click.echo("No note saved!")

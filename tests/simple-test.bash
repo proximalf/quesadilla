@@ -1,5 +1,5 @@
-takenote=~/dev/take-note/takenote
-
+# takenote=~/dev/take-note/takenote
+takenote=takenote
 python -m $takenote -t "title test" -- "This is a note"
 
 python -m $takenote "This is a note has no title"
