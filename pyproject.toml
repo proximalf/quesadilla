@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "takenote"
-version = "0.0.2"
+version = "0.0.1"
 description = "Note taking terminal app, for integration with obsidian."
 authors = ["proximalf <proximalfuture@gmail.com>"]
 license = "MIT"
@@ -19,8 +19,7 @@ packages = [
 ]
 
 [tool.semantic_release]
-version_variable = "pyproject.toml:tool.poetry.version"
-branch = "main"
+version_variable = "pyproject.toml:version"
 upload_to_pypi = false
 upload_to_release = false
 #build_command = "pip install poetry && poetry build"
