@@ -3,8 +3,15 @@ poetry export -f requirements.txt --output requirements.txt
 python -m pip install -r requirements.txt
 
 poetry install
+# python -m takenote --help
 
-#poetry build
-#python -m pip install dist/takenote-*-py3-*.whl -e .
 
-python -m takenote --help
+# Build wheel for install.
+# poetry build
+# # Remove version
+# python -m pip uninstall takenote -y
+# # Install new one
+# python -m pip install dist/takenote-*-py3-*.whl
+
+# Takenote entry point as denoted in the pyproject file.
+tn

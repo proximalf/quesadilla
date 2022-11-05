@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "takenote"
-version = "0.0.1"
+version = "0.0.2"
 description = "Note taking terminal app, for integration with obsidian."
 authors = ["proximalf <proximalfuture@gmail.com>"]
 license = "MIT"
@@ -18,7 +18,7 @@ packages = [
     { include = "takenote" }
 ]
 
-[projects.scripts]
+[tool.poetry.scripts]
 tn = "takenote:cli"
 
 [tool.poetry.urls]
@@ -42,6 +42,6 @@ select = ["E", "F"]
 # ignore = [
 
 #     ]
-# per-file-ignores = [
-#     #"path/to/file.py:F401"
-# ]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
