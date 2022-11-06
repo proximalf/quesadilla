@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import List
 from dynaconf import Dynaconf, Validator
 
 validators = [
@@ -19,13 +20,13 @@ def generate_config_file(filepath: Path) -> None:
             file.write(template.read())
 
 
-def config_file(filepath: Path) -> Dynaconf:
+def config_file(filepaths: List[Path]) -> Dynaconf:
     """
     returns an existing config file.
     """
     settings = Dynaconf(
         envvar_prefix="DYNACONF",
-        settings_files=filepath,
+        settings_files=filepaths,
         validators=validators,
     )
     return settings

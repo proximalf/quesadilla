@@ -1,5 +1,8 @@
 poetry install
 
+# Set test ENV
+export TN_ENV=./tests/test-takenote-config.toml
+
 test_dir=./dirty/test-output/test
 dir=$PWD
 
@@ -8,9 +11,13 @@ mkdir $test_dir
 
 cd $test_dir
 echo $PWD
-tn --title "test note2" -- "Global config"
+tn --title "global settings" -- "Global config"
 tn --generate-config
-echo "SAVE_PATH_NOTES = './'" >> ./tn-config.toml
-tn  --title "test note" -- "Local config"
+tn --title "generated but not overwritten" -- "Global config"
+echo "SAVE_PATH_NOTES = './'" >> ./takenote-config.toml
+tn  --title "local settings" -- "Local config"
 
 cd $dir
+
+# Clean up ENV
+unset TN_ENV

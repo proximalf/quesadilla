@@ -8,4 +8,5 @@ dist
 
 # Ignore dynaconf secret files
 .secrets.*
-tn-config.toml
+
+*/*-config.toml

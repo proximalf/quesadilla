@@ -14,5 +14,6 @@
 # SAVE_PATH_NOTES = "./"
 
 # Files to append to
+# No defaults
 # [APPEND_NOTES]
 # myfile = "./appendthisfile.md"

@@ -1,11 +1,13 @@
+import os
 from pathlib import Path
 from typing import Any, Dict
 import click
 from takenote.config import config_file, generate_config_file
 from takenote.note import append_to_note, create_note
 
-CONFIG_FILE_NAME = "tn-config.toml"
-GLOBAL_CONFIG_FILE = Path(f"~/.config/{CONFIG_FILE_NAME}").expanduser()
+CONFIG_FILE_NAME = "takenote-config.toml"
+GLOBAL_DIR = Path.home() / ".tn"
+GLOBAL_CONFIG = Path(os.environ.get("TN_ENV")) if "TN_ENV" in os.environ else GLOBAL_DIR / CONFIG_FILE_NAME
 
 
 def new_note(settings: Dict[str, Any], note: str, title: str = None) -> None:
@@ -20,6 +22,49 @@ def append_note(settings: Dict[str, Any], key: str, note: str) -> None:
     filepath = Path(settings["append_notes"][key])
     click.secho(f"Appending to note!\n{filepath}", fg="green")
     append_to_note(filepath, "\n" + note)
+
+
+def initialise_app_dir(directory: Path) -> None:
+    """
+    Initialise the global directory for app.
+
+    Parameters
+    ----------
+    directory: Path
+        Directory path of app.
+    """
+    directory.mkdir(exist_ok=True)
+    generate_config_file(directory / CONFIG_FILE_NAME)
+
+
+def fetch_settings(generate_config: bool) -> Dict[str, Any]:
+    """
+    Fetches settings.
+
+    Parameters
+    ----------
+    generate_config: bool
+        Flag requires setting to generate config.
+
+    Returns
+    ----------
+    Dict[str, Any]
+        Settings dict, from Dynaconf
+    """
+    # Generate settings, check for local
+    local_config = Path().cwd() / CONFIG_FILE_NAME
+
+    if not local_config.exists() and generate_config:
+        click.secho(f"Generated config file: {local_config}", fg="blue")
+        generate_config_file(local_config)
+        return 0
+
+    if local_config.exists():
+        click.echo("Using local settings")
+        return config_file([GLOBAL_CONFIG, local_config])
+    else:
+        click.echo("Using global settings")
+        return config_file([GLOBAL_CONFIG])
 
 
 @click.command()
@@ -53,24 +98,12 @@ def cli(note: str, title: str = None, append_key: str = None, generate_config: b
 
     """
     click.secho("Take note!", fg="magenta")
+
+    initialise_app_dir(GLOBAL_DIR)
+
+    settings = fetch_settings(generate_config)
+
     try:
-        # Generate settings, check for local
-        local_config = Path().cwd() / CONFIG_FILE_NAME
-
-        if not local_config.exists() and generate_config:
-            click.secho(f"Generated config file: {local_config}", fg="blue")
-            generate_config_file(local_config)
-            return 0
-
-        if local_config.exists():
-            config_path = local_config
-            click.echo("Using local settings")
-        else:
-            config_path = GLOBAL_CONFIG_FILE
-            click.echo("Using global settings")
-
-        settings = config_file(config_path)
-
         if note is None:
             note = click.edit()
 
