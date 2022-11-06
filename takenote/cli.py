@@ -57,7 +57,6 @@ def fetch_settings(generate_config: bool) -> Dict[str, Any]:
     if not local_config.exists() and generate_config:
         click.secho(f"Generated config file: {local_config}", fg="blue")
         generate_config_file(local_config)
-        return 0
 
     if local_config.exists():
         click.echo("Using local settings")
@@ -102,6 +101,8 @@ def cli(note: str, title: str = None, append_key: str = None, generate_config: b
     initialise_app_dir(GLOBAL_DIR)
 
     settings = fetch_settings(generate_config)
+    if generate_config:
+        return 0  # Don't continue after generating config
 
     try:
         if note is None:
