@@ -12,8 +12,9 @@ GLOBAL_CONFIG = Path(os.environ.get("TN_ENV")) if "TN_ENV" in os.environ else GL
 
 def new_note(settings: Dict[str, Any], note: str, title: str = None) -> None:
     """New note function."""
-    output_dir = Path(settings["save_path_notes"])
-    filepath = create_note(output_dir, note, title=title)
+    # Expand user in case '~' is used.
+    output_dir = Path(settings["save_path_notes"]).expanduser()
+    filepath = create_note(output_dir.absolute(), note, title=title)
     click.secho(f"Note saved successfully!\n{filepath}", fg="green")
 
 

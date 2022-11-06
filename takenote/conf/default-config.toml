@@ -11,6 +11,8 @@
 # ==================== ~ ====================
 
 # Set this path
+# Absolute paths for global settings, '~/notes/' is okay.
+# Relative paths are preferred for local settings
 # SAVE_PATH_NOTES = "./"
 
 # Files to append to
