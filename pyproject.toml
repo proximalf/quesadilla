@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "takenote"
-version = "0.1.2"
+version = "0.1.3"
 description = "Note taking terminal app, for integration with obsidian."
 authors = ["proximalf <proximalfuture@gmail.com>"]
 license = "MIT"
