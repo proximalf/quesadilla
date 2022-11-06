@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Any, Dict
 import click
-from takenote.config import config_file
+from takenote.config import config_file, generate_config_file
 from takenote.note import append_to_note, create_note
 
 CONFIG_FILE_NAME = "tn-config.toml"
@@ -40,10 +40,11 @@ def append_note(settings: Dict[str, Any], key: str, note: str) -> None:
     default=None,
     help="Use a key as defined by APPEND_NOTES in the tn-config file.",
 )
-@click.option("--generate-config", is_flag=True, default=False, help="Use to generate a local config file.")
+@click.option("-gc", "--generate-config", is_flag=True, default=False, help="Use to generate a local config file.")
 def cli(note: str, title: str = None, append_key: str = None, generate_config: bool = False) -> None:
     """
     The note has to be wrapped in quotes for single line.
+
     \b
     Example
     ----------
@@ -56,15 +57,19 @@ def cli(note: str, title: str = None, append_key: str = None, generate_config: b
         # Generate settings, check for local
         local_config = Path().cwd() / CONFIG_FILE_NAME
 
+        if not local_config.exists() and generate_config:
+            click.secho(f"Generated config file: {local_config}", fg="blue")
+            generate_config_file(local_config)
+            return 0
+
         if local_config.exists():
             config_path = local_config
+            click.echo("Using local settings")
         else:
             config_path = GLOBAL_CONFIG_FILE
             click.echo("Using global settings")
 
-        settings = config_file(config_path, generate_config)
-        if generate_config:
-            return 0
+        settings = config_file(config_path)
 
         if note is None:
             note = click.edit()
@@ -79,3 +84,7 @@ def cli(note: str, title: str = None, append_key: str = None, generate_config: b
         return 0
     except Exception as e:
         click.secho(f"Error occured:\n{e}", fg="red")
+
+
+if __name__ == "__main__":
+    cli()

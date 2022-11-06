@@ -1,0 +1,18 @@
+# ==================== Take Note - config ====================
+# Defaults are commented out.
+
+# APPEND_NOTES is a multi key object that can take names for any
+# path as a key of sorts
+# eg:
+# [APPEND_NOTES]
+# myfile = "./appendthisfile.md"
+# daily = "./dailynote.md
+#
+# ==================== ~ ====================
+
+# Set this path
+# SAVE_PATH_NOTES = "./"
+
+# Files to append to
+# [APPEND_NOTES]
+# myfile = "./appendthisfile.md"

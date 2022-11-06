@@ -1,5 +1,4 @@
-#tn=~/dev/take-note/takenote
-tn=takenote
+poetry install
 
 test_dir=./dirty/test-output/test
 dir=$PWD
@@ -9,9 +8,9 @@ mkdir $test_dir
 
 cd $test_dir
 echo $PWD
-python -m $tn --title "test note2" -- "Global config"
-python -m $tn --generate-config
-echo "SAVE_PATH_NOTES = './'" > ./tn-config.toml
-python -m $tn  --title "test note" -- "Local config"
+tn --title "test note2" -- "Global config"
+tn --generate-config
+echo "SAVE_PATH_NOTES = './'" >> ./tn-config.toml
+tn  --title "test note" -- "Local config"
 
 cd $dir
