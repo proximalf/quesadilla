@@ -1,6 +1,6 @@
 # {{ title }}
 
 tags: #seedling
-{{ date.format("dddd Do MMMM YYYY HH:mm:ss") }}
+{{ date.format("%A %d %B %Y %H:%M:%S") }}
 
 {{ note }}
