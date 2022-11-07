@@ -8,7 +8,7 @@ validators = [
 ]
 
 # Config template location.
-CONFIG_TEMPLATE = Path(__file__).parent / "conf/default-config.toml"
+CONFIG_TEMPLATE = Path(__file__).parent / "resources/default-config.toml"
 
 
 def generate_config_file(filepath: Path) -> None:

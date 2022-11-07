@@ -66,9 +66,12 @@ def initialise_app_dir(directory: Path) -> None:
     """
     directory.mkdir(exist_ok=True)
     config_path = directory / CONFIG_FILE_NAME
+    templates_dir = directory / "templates"
     if not config_path.exists():
         # Write config
         generate_config_file(config_path)
+    if not templates_dir.exists():
+        generate_template_folder(templates_dir)
 
 
 def fetch_settings(local_config: Path) -> Dict[str, Any]:

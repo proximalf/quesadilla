@@ -17,9 +17,21 @@
 
 # Verbosity
 # 0 is only error messages
+# 3 is all messages
 # VERBOSITY_LEVEL = 1
 
 # Files to append to
 # No defaults
 # [APPEND_NOTES]
 # myfile = "./appendthisfile.md"
+# A format for a file to be appended to
+# daily = "DATE:YYMM"
+
+# Templating
+# [TEMPLATES]
+# title.new = "DATE:YYMM_HHmmss"
+# title.newwtitle = "new - TITLE"
+# Stored in template folder
+# new_note = "new-note-.md"
+# daily = "daily-appeneder.md"
+# daily_new = "daily-new.md"
