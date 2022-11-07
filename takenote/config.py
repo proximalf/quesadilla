@@ -3,7 +3,8 @@ from typing import List
 from dynaconf import Dynaconf, Validator
 
 validators = [
-    Validator("save_path_notes", must_exist=True, default="./"),
+    Validator("SAVE_PATH_NOTES", must_exist=True, default="./"),
+    Validator("VERBOSITY_LEVEL", must_exist=True, default=1),
 ]
 
 # Config template location.

@@ -11,6 +11,50 @@ GLOBAL_DIR = Path.home() / APP_DIR
 GLOBAL_CONFIG = Path(os.environ.get("TN_ENV")) if "TN_ENV" in os.environ else GLOBAL_DIR / CONFIG_FILE_NAME
 
 
+class Output:
+    """
+    Object for writing using click.echo(), set level for verbosity.
+
+    Level
+    ----------
+    0 : Minimum level, Errors
+    1 : Info
+    2 : Some Debug
+    3 : Extra Debug
+    """
+
+    def __init__(self) -> None:
+        self._level = 3
+
+    def echo(self, msg, style: Optional[Dict[str, str]] = None, level=3):
+        """
+        Parameters
+        ----------
+        msg: str
+            Message to pass to echo.
+        style: Optional[Dict[str, str]]
+            Dict object representing chosen style.
+        """
+        if level <= self._level:
+            if style is not None:
+                # Unpack style
+                click.secho(msg, **style)
+            else:
+                click.echo(msg)
+
+    @property
+    def level(self):
+        return self._level
+
+    @level.setter
+    def level(self, level):
+        self._level = level
+        self.echo(f"Vebosity level set: {level}", level=3)
+
+
+output = Output()
+
+
 def initialise_app_dir(directory: Path) -> None:
     """
     Initialise the directory for app.
@@ -42,10 +86,9 @@ def fetch_settings(local_config: Path) -> Dict[str, Any]:
         Settings dict, from Dynaconf
     """
     if local_config.exists():
-        click.echo("Using local settings")
+        output.echo("Using local settings", level=2)
         return config_file([GLOBAL_CONFIG, local_config])
     else:
-        click.echo("Using global settings")
         return config_file([GLOBAL_CONFIG])
 
 
@@ -63,9 +106,9 @@ def new_note(settings: Dict[str, Any], note: str, title: str = None) -> None:
         title string.
     """
     # Expand user in case '~' is used.
-    output_dir = Path(settings["save_path_notes"]).expanduser()
+    output_dir = Path(settings["SAVE_PATH_NOTES"]).expanduser()
     filepath = create_note(output_dir.absolute(), note, title=title)
-    click.secho(f"Note saved successfully!\n{filepath}", fg="green")
+    output.echo(f"Note saved successfully!\n{filepath}", {"fg": "green"}, level=1)
 
 
 def append_note(settings: Dict[str, Any], key: str, note: str) -> None:
@@ -84,10 +127,10 @@ def append_note(settings: Dict[str, Any], key: str, note: str) -> None:
     # Get key from settings, expand user in case '~' is used
     filepath = Path(settings["append_notes"][key]).expanduser()
     if filepath.exists():
-        click.secho(f"Appending to note!\n{filepath}", fg="green")
+        output.echo(f"Appending to note!\n{filepath}", {"fg": "green"}, level=2)
         append_to_note(filepath, "\n" + note)
     else:
-        click.secho(f"File doesn't exist: {filepath}", fg="red")
+        output.echo(f"File doesn't exist: {filepath}", {"fg": "green"}, level=0)
 
 
 @click.command()
@@ -106,7 +149,7 @@ def append_note(settings: Dict[str, Any], key: str, note: str) -> None:
     "append_key",
     type=str,
     default=None,
-    help=f"Use a key as defined by APPEND_NOTES in the {CONFIG_FILE_NAME} file.",
+    help="Use a key as defined by APPEND_NOTES in the config file.",
 )
 @click.option(
     "-gc",
@@ -114,7 +157,7 @@ def append_note(settings: Dict[str, Any], key: str, note: str) -> None:
     "generate_config",
     is_flag=True,
     default=False,
-    help=f"Use to generate a local config file, path is {CONFIG_FILE_NAME}",
+    help=f"Use to generate a local config file, name is {CONFIG_FILE_NAME}",
 )
 @click.option(
     "-p",
@@ -123,16 +166,21 @@ def append_note(settings: Dict[str, Any], key: str, note: str) -> None:
     default=None,
     help="A specifed path to save a note to, takes precedence over defined settings.",
 )
+@click.option(
+    "-v", "--verbose", "verbose", count=True, help="Set the verbosity level. Default is 0 level. Can be set in config."
+)
 def cli(
     note: str,
     title: str = None,
     append_key: str = None,
     generate_config: bool = False,
     custom_path: Optional[Path] = None,
+    verbose: int = 0,
 ) -> None:
     """
     Take note CLI program, for those that prefer using the terminal.
     The note has to be wrapped in quotes for single line.
+    Config file name: takenote-config.toml
 
     \b
     Example
@@ -143,7 +191,6 @@ def cli(
     tn -t "Title" # Opens your favourite editor and saves note on close
     tn -a KEY -- "Note String"
     """
-    click.secho("Take note!", fg="magenta")
 
     # Check for local config
     local = Path.cwd() / APP_DIR
@@ -154,24 +201,31 @@ def cli(
         return 0  # Don't continue after generating config
 
     settings = fetch_settings(local / CONFIG_FILE_NAME)
+
+    output.level = verbose if verbose != 0 else settings["VERBOSITY_LEVEL"]
+    output.echo("Take note!", {"fg": "magenta"}, level=0)
+
     if custom_path is not None:
-        settings["save_path_notes"] = custom_path
+        settings["SAVE_PATH_NOTES"] = custom_path
+        output.echo(f"Saving to output: {custom_path}", level=3)
 
     try:
         if note is None:
             note = click.edit()
 
         if note is None:
-            click.echo("No note saved!")
+            output.echo("No note saved!", {"fg": "red"}, level=0)
             return 1
         else:
             if append_key:
                 append_note(settings, append_key, note)
             else:
                 new_note(settings, note, title)
-            return 0
+
+        output.echo("Success!", level=1)
+        return 0
     except Exception as e:
-        click.secho(f"Error occured:\n{e}", fg="red")
+        output.echo(f"Error occured:\n{e}", {"fg": "red"}, level=0)
 
 
 if __name__ == "__main__":

@@ -15,6 +15,10 @@
 # Relative paths are preferred for local settings
 # SAVE_PATH_NOTES = "./"
 
+# Verbosity
+# 0 is only error messages
+# VERBOSITY_LEVEL = 1
+
 # Files to append to
 # No defaults
 # [APPEND_NOTES]
