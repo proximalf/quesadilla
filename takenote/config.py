@@ -13,6 +13,11 @@ CONFIG_TEMPLATE = Path(__file__).parent / "conf/default-config.toml"
 def generate_config_file(filepath: Path) -> None:
     """
     Creates a config file from template if it does not currently exist.
+
+    Parameters
+    ----------
+    filepath: Path
+        File path to save file to.
     """
 
     with open(CONFIG_TEMPLATE, "r") as template:
@@ -22,10 +27,20 @@ def generate_config_file(filepath: Path) -> None:
 
 def config_file(filepaths: List[Path]) -> Dynaconf:
     """
-    returns an existing config file.
+    Returns an existing config file. Requires a list of files for input.
+
+    Parameters
+    ----------
+    filepaths: List[Path]
+        List of config file paths.
+
+    Returns
+    ----------
+    Dict[str, Any]
+        Settings object from Dynaconf.
     """
     settings = Dynaconf(
-        envvar_prefix="DYNACONF",
+        envvar_prefix="TN",
         settings_files=filepaths,
         validators=validators,
     )
