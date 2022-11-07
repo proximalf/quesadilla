@@ -4,11 +4,12 @@ from typing import Any, Dict, Optional
 import click
 from takenote.config import config_file, generate_config_file
 from takenote.note import append_to_note, create_note
+from takenote.templates import generate_template_folder
 
 CONFIG_FILE_NAME = "takenote-config.toml"
-APP_DIR = ".tn"
-GLOBAL_DIR = Path.home() / APP_DIR
-GLOBAL_CONFIG = Path(os.environ.get("TN_ENV")) if "TN_ENV" in os.environ else GLOBAL_DIR / CONFIG_FILE_NAME
+APP_DIR_NAME = ".tn"
+GLOBAL_DIR = Path(os.environ.get("TN_ENV")) if "TN_ENV" in os.environ else Path.home() / APP_DIR_NAME
+GLOBAL_CONFIG = GLOBAL_DIR / CONFIG_FILE_NAME
 
 
 class Output:
@@ -196,7 +197,7 @@ def cli(
     """
 
     # Check for local config
-    local = Path.cwd() / APP_DIR
+    local = Path.cwd() / APP_DIR_NAME
     app_dir = local if not local.exists() and generate_config else GLOBAL_DIR
     initialise_app_dir(app_dir)
 

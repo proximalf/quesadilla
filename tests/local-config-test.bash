@@ -1,7 +1,7 @@
 poetry install
 
 # Set test ENV
-export TN_ENV=./tests/test-takenote-config.toml
+export TN_ENV=~/dev/take-note/tests/test.tn
 
 test_dir=./dirty/test-output/test
 dir=$PWD
