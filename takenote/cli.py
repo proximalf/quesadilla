@@ -6,13 +6,14 @@ from takenote.config import config_file, generate_config_file
 from takenote.note import append_to_note, create_note
 
 CONFIG_FILE_NAME = "takenote-config.toml"
-GLOBAL_DIR = Path.home() / ".tn"
+APP_DIR = ".tn"
+GLOBAL_DIR = Path.home() / APP_DIR
 GLOBAL_CONFIG = Path(os.environ.get("TN_ENV")) if "TN_ENV" in os.environ else GLOBAL_DIR / CONFIG_FILE_NAME
 
 
 def initialise_app_dir(directory: Path) -> None:
     """
-    Initialise the global directory for app.
+    Initialise the directory for app.
 
     Parameters
     ----------
@@ -20,30 +21,26 @@ def initialise_app_dir(directory: Path) -> None:
         Directory path of app.
     """
     directory.mkdir(exist_ok=True)
-    generate_config_file(directory / CONFIG_FILE_NAME)
+    config_path = directory / CONFIG_FILE_NAME
+    if not config_path.exists():
+        # Write config
+        generate_config_file(config_path)
 
 
-def fetch_settings(generate_config: bool) -> Dict[str, Any]:
+def fetch_settings(local_config: Path) -> Dict[str, Any]:
     """
-    Fetches settings.
+    Fetches settings. local config is checked to exist, else uses global.
 
     Parameters
     ----------
-    generate_config: bool
-        Flag requires setting to generate config.
+    local_config: Path
+        File path to local config file.
 
     Returns
     ----------
     Dict[str, Any]
         Settings dict, from Dynaconf
     """
-    # Generate settings, check for local
-    local_config = Path().cwd() / CONFIG_FILE_NAME
-
-    if not local_config.exists() and generate_config:
-        click.secho(f"Generated config file: {local_config}", fg="blue")
-        generate_config_file(local_config)
-
     if local_config.exists():
         click.echo("Using local settings")
         return config_file([GLOBAL_CONFIG, local_config])
@@ -135,11 +132,15 @@ def cli(note: str, title: str = None, append_key: str = None, generate_config: b
     """
     click.secho("Take note!", fg="magenta")
 
-    initialise_app_dir(GLOBAL_DIR)
+    # Check for local config
+    local = Path.cwd() / APP_DIR
+    app_dir = local if not local.exists() and generate_config else GLOBAL_DIR
+    initialise_app_dir(app_dir)
 
-    settings = fetch_settings(generate_config)
     if generate_config:
         return 0  # Don't continue after generating config
+
+    settings = fetch_settings(local / CONFIG_FILE_NAME)
 
     try:
         if note is None:

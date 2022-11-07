@@ -14,7 +14,7 @@ echo $PWD
 tn --title "global settings" -- "Global config"
 tn --generate-config
 tn --title "generated but not overwritten" -- "Global config"
-echo "SAVE_PATH_NOTES = './'" >> ./takenote-config.toml
+echo "SAVE_PATH_NOTES = './'" >> ./.tn/takenote-config.toml
 tn  --title "local settings" -- "Local config"
 
 cd $dir
