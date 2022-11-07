@@ -2,6 +2,15 @@ from pathlib import Path
 from typing import Optional
 from takenote.lib import zettelkasten
 
+# class Note:
+
+#     def __init__(self, body):
+#         self.body = body
+
+#     def apply_template(self, template: Template) -> str:
+
+#         return "ok"
+
 
 def create_note(dirpath: Path, note: str, title: Optional[str] = None) -> Path:
     """

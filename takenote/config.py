@@ -5,6 +5,7 @@ from dynaconf import Dynaconf, Validator
 validators = [
     Validator("SAVE_PATH_NOTES", must_exist=True, default="./"),
     Validator("VERBOSITY_LEVEL", must_exist=True, default=1),
+    Validator("TEMPLATES_DIR", must_exist=True, default="./templates"),
 ]
 
 # Config template location.

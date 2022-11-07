@@ -2,9 +2,10 @@ import os
 from pathlib import Path
 from typing import Any, Dict, Optional
 import click
+
 from takenote.config import config_file, generate_config_file
 from takenote.note import append_to_note, create_note
-from takenote.templates import generate_template_folder
+from takenote.templates import generate_template_folder, title_from_format
 
 CONFIG_FILE_NAME = "takenote-config.toml"
 APP_DIR_NAME = ".tn"
@@ -173,13 +174,22 @@ def append_note(settings: Dict[str, Any], key: str, note: str) -> None:
 @click.option(
     "-v", "--verbose", "verbose", count=True, help="Set the verbosity level. Default is 0 level. Can be set in config."
 )
+@click.option(
+    "-at",
+    "--template",
+    "template",
+    type=str,
+    default=None,
+    help="Provide a key to apply a corrasponding template to a note.",
+)
 def cli(
     note: str,
-    title: str = None,
-    append_key: str = None,
+    title: Optional[str] = None,
+    append_key: Optional[str] = None,
     generate_config: bool = False,
     custom_path: Optional[Path] = None,
     verbose: int = 0,
+    template: Optional[str] = None,
 ) -> None:
     """
     Take note CLI program, for those that prefer using the terminal.
@@ -213,10 +223,20 @@ def cli(
         settings["SAVE_PATH_NOTES"] = custom_path
         output.echo(f"Saving to output: {custom_path}", level=3)
 
-    try:
-        if note is None:
-            note = click.edit()
+    title = title_from_format(settings["FORMAT"]["title"], title)
 
+    if note is None:
+        note = click.edit()
+
+    # if template is not None:
+    #     print(settings["TEMPLATES_DIR"])
+    #     template_dir = app_dir / settings["TEMPLATES_DIR"]
+    #     print(template)
+    #     print(settings["TEMPLATES"][template])
+    #     template = apply_template(settings, template_dir, template)
+    #     print(template)
+
+    try:
         if note is None:
             output.echo("No note saved!", {"fg": "red"}, level=0)
             return 1
