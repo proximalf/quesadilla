@@ -17,5 +17,7 @@ tn --append "TEST" -- "append note"
 
 tn --append "test2" -- "append note2"
 
+tn --path "./dirty/test-output" --title "forced path" -- "forced"
+
 # Clean up ENV
 unset TN_ENV

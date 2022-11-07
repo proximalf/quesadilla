@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 import click
 from takenote.config import config_file, generate_config_file
 from takenote.note import append_to_note, create_note
@@ -116,7 +116,20 @@ def append_note(settings: Dict[str, Any], key: str, note: str) -> None:
     default=False,
     help=f"Use to generate a local config file, path is {CONFIG_FILE_NAME}",
 )
-def cli(note: str, title: str = None, append_key: str = None, generate_config: bool = False) -> None:
+@click.option(
+    "-p",
+    "--path",
+    "custom_path",
+    default=None,
+    help="A specifed path to save a note to, takes precedence over defined settings.",
+)
+def cli(
+    note: str,
+    title: str = None,
+    append_key: str = None,
+    generate_config: bool = False,
+    custom_path: Optional[Path] = None,
+) -> None:
     """
     Take note CLI program, for those that prefer using the terminal.
     The note has to be wrapped in quotes for single line.
@@ -141,6 +154,8 @@ def cli(note: str, title: str = None, append_key: str = None, generate_config: b
         return 0  # Don't continue after generating config
 
     settings = fetch_settings(local / CONFIG_FILE_NAME)
+    if custom_path is not None:
+        settings["save_path_notes"] = custom_path
 
     try:
         if note is None:
