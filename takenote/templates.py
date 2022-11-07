@@ -57,17 +57,45 @@ def generate_template_folder(dirpath: Path) -> None:
                 file.write(template.read())
 
 
-def fetch_template(settings: Dict[str, str], template_dir, key: str) -> str:
+def fetch_template(template_path: Path) -> str:
+    """
+    Fetch template to process.
 
-    path = template_dir / settings["TEMPLATES"][key]
-    with open(path, "r") as file:
+    Parameters
+    ----------
+    template_path: Path
+        Template file path.
+    """
+    with open(template_path, "r") as file:
         return Template(file.read())
 
 
-def apply_template(settings: Dict[str, str], template_dir, key: str, data: Dict[str, str]):
+def apply_template(template_path: Path, note: str, title: str):
+    """
+    Generate title string from defined format.
 
-    template = fetch_template(settings, template_dir, key)
+    Formats covered:
+        'long', 'short'.
 
-    note = template.render(data=data)
+    Formatting objects
+        date, title.
+
+    Parameters
+    ----------
+    template_path: Path
+        Path pointing to referencing template.
+    note: str
+        Note string.
+    title: Optional[str]
+        Title string.
+
+    Returns
+    ----------
+    str
+        Processed template string.
+    """
+    template = fetch_template(template_path)
+
+    note = template.render(date=DateTemplate(), note=note, title=title)
 
     return note

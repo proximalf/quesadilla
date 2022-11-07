@@ -5,7 +5,7 @@ import click
 
 from takenote.config import config_file, generate_config_file
 from takenote.note import append_to_note, create_note
-from takenote.templates import generate_template_folder, title_from_format
+from takenote.templates import apply_template, generate_template_folder, title_from_format
 
 CONFIG_FILE_NAME = "takenote-config.toml"
 APP_DIR_NAME = ".tn"
@@ -51,7 +51,7 @@ class Output:
     @level.setter
     def level(self, level):
         self._level = level
-        self.echo(f"Vebosity level set: {level}", level=3)
+        self.echo(f"Verbosity level set: {level}", level=3)
 
 
 output = Output()
@@ -228,13 +228,11 @@ def cli(
     if note is None:
         note = click.edit()
 
-    # if template is not None:
-    #     print(settings["TEMPLATES_DIR"])
-    #     template_dir = app_dir / settings["TEMPLATES_DIR"]
-    #     print(template)
-    #     print(settings["TEMPLATES"][template])
-    #     template = apply_template(settings, template_dir, template)
-    #     print(template)
+    if template is not None:
+        template_dir = app_dir / settings["TEMPLATES_DIR"]
+        template_path = template_dir / settings["TEMPLATES"][template]
+        output.echo(f"Applying template: {template}", level=3)
+        note = apply_template(template_path, note, title)
 
     try:
         if note is None:
