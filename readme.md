@@ -15,7 +15,10 @@ tn --path "./path to save to/"
 ```
 
 ## Configation
-There is a global config file, and a local config can be generated with the command `-gc / --generate-config`.
+There is a global config file, and a local config this can be generated with the command. `tn -gc | tn --generate-config`.
+
+Global config: `~/.tn/takenote-config.toml`
+Local config: `$PWD/.tn/takenote-config.toml`
 
 ## Templates
 [Jinja](https://jinja.palletsprojects.com/en/3.1.x/templates/) is the templating engine used, its relavtively simple to use and has great integration potential.

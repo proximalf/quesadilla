@@ -135,7 +135,7 @@ def append_note(settings: Dict[str, Any], key: str, note: str) -> None:
         output.echo(f"Appending to note!\n{filepath}", {"fg": "green"}, level=2)
         append_to_note(filepath, "\n" + note)
     else:
-        output.echo(f"File doesn't exist: {filepath}", {"fg": "green"}, level=0)
+        output.echo(f"File doesn't exist: {filepath}", {"fg": "red"}, level=0)
 
 
 @click.command()
