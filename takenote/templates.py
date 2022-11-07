@@ -9,7 +9,13 @@ DEFAULT_TEMPLATES_FOLDER = Path(__file__).parent / "resources/default-templates"
 
 def title_from_format(format: Dict[str, str], title: Optional[str]):
     """
-    Generate title string from defined format in settings file.
+    Generate title string from defined format.
+
+    Formats covered:
+        'long', 'short'.
+
+    Formatting objects
+        date, title.
 
     Parameters
     ----------
