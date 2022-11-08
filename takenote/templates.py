@@ -16,8 +16,8 @@ def title_from_format(format: Dict[str, str], title: Optional[str]):
 
     Parameters
     ----------
-    settings: Dict[str, str]
-        Setting object
+    format: Dict[str, str]
+        Dict object representting formats as described.
     title: Optional[str]
         Title string.
 

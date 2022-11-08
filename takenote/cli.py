@@ -20,16 +20,28 @@ class Output:
     """
 
     def __init__(self) -> None:
+        """Initialises with a set level of 3."""
         self._level = 3
 
-    def echo(self, msg, style: Optional[Dict[str, str]] = None, level=3):
+    def echo(self, msg, style: Optional[Dict[str, str]] = None, level: int = 3) -> None:
         """
+        Echos msg to output.
+
+        Level
+        ----------
+        0 : Minimum level, Errors
+        1 : Info
+        2 : Some Debug
+        3 : Extra Debug
+
         Parameters
         ----------
         msg: str
             Message to pass to echo.
         style: Optional[Dict[str, str]]
             Dict object representing chosen style.
+        level: int
+            The level the message is printed as.
         """
         if level <= self._level:
             if style is not None:
@@ -39,11 +51,27 @@ class Output:
                 click.echo(msg)
 
     @property
-    def level(self):
+    def level(self) -> int:
+        """
+        Return set level.
+
+        Returns
+        ----------
+        int
+            Level as int.
+        """
         return self._level
 
     @level.setter
-    def level(self, level):
+    def level(self, level: int) -> None:
+        """
+        Set level. Refer to class doc for more on level.
+
+        Parameters
+        ----------
+        level: int
+            int to set level as.
+        """
         self._level = level
         self.echo(f"Verbosity level set: {level}", level=3)
 
@@ -82,6 +110,8 @@ def fetch_settings(global_config: Path, local_config: Path) -> Dict[str, Any]:
 
     Parameters
     ----------
+    global_config: Path
+        Global config file path, loaded before local.
     local_config: Path
         File path to local config file.
 
