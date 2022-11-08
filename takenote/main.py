@@ -18,14 +18,14 @@ CONFIG_TEMPLATE = Path(__file__).parent / "resources/default-config.toml"
 
 
 @click.command()
-@click.argument("note", nargs=1, type=str, required=False)
+@click.argument("title", nargs=1, type=str, required=False)
 @click.option(
-    "-t",
-    "--title",
-    "title",
+    "-n",
+    "--note",
+    "note",
     type=str,
     default=None,
-    help="Sets the filename of a note.",
+    help="Contents of note.",
 )
 @click.option(
     "-a",
@@ -54,7 +54,7 @@ CONFIG_TEMPLATE = Path(__file__).parent / "resources/default-config.toml"
     "-v", "--verbose", "verbose", count=True, help="Set the verbosity level. Default is 0 level. Can be set in config."
 )
 @click.option(
-    "-at",
+    "-t",
     "--template",
     "template",
     type=str,
@@ -62,8 +62,8 @@ CONFIG_TEMPLATE = Path(__file__).parent / "resources/default-config.toml"
     help="Provide a key to apply a corrasponding template to a note.",
 )
 def cli(
-    note: str,
     title: Optional[str] = None,
+    note: Optional[str] = None,
     append_key: Optional[str] = None,
     generate_config: bool = False,
     custom_path: Optional[Path] = None,
@@ -79,10 +79,13 @@ def cli(
     Example
     ----------
     tn -gc # Generate config in local directory
-    tn "Note"
-    tn -t "Title" -- "Note String"
-    tn -t "Title" # Opens your favourite editor and saves note on close
-    tn -a KEY -- "Note String"
+
+    tn "Title" # Opens your favourite editor and saves note on close
+
+    tn "Title" -n "Note String"
+    tn -n "Note" # Title is auto generated
+
+    tn -a KEY -n "Note String"
     """
 
     # Check for local config

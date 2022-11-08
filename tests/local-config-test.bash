@@ -11,11 +11,11 @@ mkdir $test_dir
 
 cd $test_dir
 echo $PWD
-tn --title "global settings" -- "Global config"
+tn "global settings" -n "Global config"
 tn --generate-config
-tn --title "generated but not overwritten" -- "Global config"
+tn "generated but not overwritten" -n "Global config"
 echo "SAVE_PATH_NOTES = './'" >> ./.tn/takenote-config.toml
-tn  --title "local settings" -- "Local config"
+tn "local settings" -n "Local config"
 
 cd $dir
 

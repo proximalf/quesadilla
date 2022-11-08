@@ -9,7 +9,7 @@ dir=$PWD
 rm $test_dir -r
 mkdir $test_dir
 
-tn  --title "template test" --template new -- "templated note"
+tn "template test" --template new --note "templated note"
 
 cd $dir
 
