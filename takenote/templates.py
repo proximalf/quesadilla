@@ -1,10 +1,7 @@
 from pathlib import Path
 from typing import Dict, Optional
 from jinja2 import Template
-from takenote.lib import DateTemplate
-
-# Config template location.
-DEFAULT_TEMPLATES_FOLDER = Path(__file__).parent / "resources/default-templates"
+from takenote.core import DateTemplate
 
 
 def title_from_format(format: Dict[str, str], title: Optional[str]):
@@ -38,20 +35,22 @@ def title_from_format(format: Dict[str, str], title: Optional[str]):
         return tp.render(date=DateTemplate(), title=title)
 
 
-def generate_template_folder(dirpath: Path) -> None:
+def generate_template_folder(template_folder: Path, dirpath: Path) -> None:
     """
     Generates template folder from example, and saves the templates
     under dirpath.
 
     Parameters
     ----------
+    template_folder: Path
+        Template folder to generate new folder from
     dirpath: Path
-        Path to folder.
+        Path to folder to be templated.
     """
     if not dirpath.exists():
         dirpath.mkdir(parents=True)
 
-    for template_file in DEFAULT_TEMPLATES_FOLDER.glob("*"):
+    for template_file in template_folder.glob("*"):
         with open(template_file, "r") as template:
             with open(dirpath / template_file.name, "w") as file:
                 file.write(template.read())

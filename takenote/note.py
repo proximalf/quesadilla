@@ -1,6 +1,6 @@
 from pathlib import Path
 from typing import Optional
-from takenote.lib import zettelkasten
+from takenote.core import zettelkasten
 
 # class Note:
 

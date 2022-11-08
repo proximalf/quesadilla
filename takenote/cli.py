@@ -1,16 +1,10 @@
-import os
 from pathlib import Path
 from typing import Any, Dict, Optional
 import click
 
 from takenote.config import config_file, generate_config_file
 from takenote.note import append_to_note, create_note
-from takenote.templates import apply_template, generate_template_folder, title_from_format
-
-CONFIG_FILE_NAME = "takenote-config.toml"
-APP_DIR_NAME = ".tn"
-GLOBAL_DIR = Path(os.environ.get("TN_ENV")) if "TN_ENV" in os.environ else Path.home() / APP_DIR_NAME
-GLOBAL_CONFIG = GLOBAL_DIR / CONFIG_FILE_NAME
+from takenote.templates import generate_template_folder
 
 
 class Output:
@@ -57,7 +51,7 @@ class Output:
 output = Output()
 
 
-def initialise_app_dir(directory: Path) -> None:
+def initialise_app_dir(directory: Path, config_file_name: str, config_template: Path, template_files_dir: Path) -> None:
     """
     Initialise the directory for app.
 
@@ -65,18 +59,24 @@ def initialise_app_dir(directory: Path) -> None:
     ----------
     directory: Path
         Directory path of app.
+    config_file_name: str
+        Filename of config file
+    config_template: Path
+        Path to template config file.
+    template_files_dir: Path
+        Path to directory of template files.
     """
     directory.mkdir(exist_ok=True)
-    config_path = directory / CONFIG_FILE_NAME
+    config_path = directory / config_file_name
     templates_dir = directory / "templates"
     if not config_path.exists():
         # Write config
-        generate_config_file(config_path)
+        generate_config_file(config_template, config_path)
     if not templates_dir.exists():
-        generate_template_folder(templates_dir)
+        generate_template_folder(template_files_dir, templates_dir)
 
 
-def fetch_settings(local_config: Path) -> Dict[str, Any]:
+def fetch_settings(global_config: Path, local_config: Path) -> Dict[str, Any]:
     """
     Fetches settings. local config is checked to exist, else uses global.
 
@@ -92,9 +92,9 @@ def fetch_settings(local_config: Path) -> Dict[str, Any]:
     """
     if local_config.exists():
         output.echo("Using local settings", level=2)
-        return config_file([GLOBAL_CONFIG, local_config])
+        return config_file([global_config, local_config])
     else:
-        return config_file([GLOBAL_CONFIG])
+        return config_file([global_config])
 
 
 def new_note(settings: Dict[str, Any], note: str, title: str = None) -> None:
@@ -136,119 +136,3 @@ def append_note(settings: Dict[str, Any], key: str, note: str) -> None:
         append_to_note(filepath, "\n" + note)
     else:
         output.echo(f"File doesn't exist: {filepath}", {"fg": "red"}, level=0)
-
-
-@click.command()
-@click.argument("note", nargs=1, type=str, required=False)
-@click.option(
-    "-t",
-    "--title",
-    "title",
-    type=str,
-    default=None,
-    help="Sets the filename of a note.",
-)
-@click.option(
-    "-a",
-    "--append",
-    "append_key",
-    type=str,
-    default=None,
-    help="Use a key as defined by APPEND_NOTES in the config file.",
-)
-@click.option(
-    "-gc",
-    "--generate-config",
-    "generate_config",
-    is_flag=True,
-    default=False,
-    help=f"Use to generate a local config file, name is {CONFIG_FILE_NAME}",
-)
-@click.option(
-    "-p",
-    "--path",
-    "custom_path",
-    default=None,
-    help="A specifed path to save a note to, takes precedence over defined settings.",
-)
-@click.option(
-    "-v", "--verbose", "verbose", count=True, help="Set the verbosity level. Default is 0 level. Can be set in config."
-)
-@click.option(
-    "-at",
-    "--template",
-    "template",
-    type=str,
-    default=None,
-    help="Provide a key to apply a corrasponding template to a note.",
-)
-def cli(
-    note: str,
-    title: Optional[str] = None,
-    append_key: Optional[str] = None,
-    generate_config: bool = False,
-    custom_path: Optional[Path] = None,
-    verbose: int = 0,
-    template: Optional[str] = None,
-) -> None:
-    """
-    Take note CLI program, for those that prefer using the terminal.
-    The note has to be wrapped in quotes for single line.
-    Config file name: takenote-config.toml
-
-    \b
-    Example
-    ----------
-    tn -gc # Generate config in local directory
-    tn "Note"
-    tn -t "Title" -- "Note String"
-    tn -t "Title" # Opens your favourite editor and saves note on close
-    tn -a KEY -- "Note String"
-    """
-
-    # Check for local config
-    local = Path.cwd() / APP_DIR_NAME
-    app_dir = local if not local.exists() and generate_config else GLOBAL_DIR
-    initialise_app_dir(app_dir)
-
-    if generate_config:
-        return 0  # Don't continue after generating config
-
-    settings = fetch_settings(local / CONFIG_FILE_NAME)
-
-    output.level = verbose if verbose != 0 else settings["VERBOSITY_LEVEL"]
-    output.echo("Take note!", {"fg": "magenta"}, level=0)
-
-    if custom_path is not None:
-        settings["SAVE_PATH_NOTES"] = custom_path
-        output.echo(f"Saving to output: {custom_path}", level=3)
-
-    title = title_from_format(settings["FORMAT"]["title"], title)
-
-    if note is None:
-        note = click.edit()
-
-    if template is not None:
-        template_dir = app_dir / settings["TEMPLATES_DIR"]
-        template_path = template_dir / settings["TEMPLATES"][template]
-        output.echo(f"Applying template: {template}", level=3)
-        note = apply_template(template_path, note, title)
-
-    try:
-        if note is None:
-            output.echo("No note saved!", {"fg": "red"}, level=0)
-            return 1
-        else:
-            if append_key:
-                append_note(settings, append_key, note)
-            else:
-                new_note(settings, note, title)
-
-        output.echo("Success!", level=1)
-        return 0
-    except Exception as e:
-        output.echo(f"Error occured:\n{e}", {"fg": "red"}, level=0)
-
-
-if __name__ == "__main__":
-    cli()

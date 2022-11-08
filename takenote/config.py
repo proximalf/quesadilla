@@ -8,21 +8,20 @@ validators = [
     Validator("TEMPLATES_DIR", must_exist=True, default="./templates"),
 ]
 
-# Config template location.
-CONFIG_TEMPLATE = Path(__file__).parent / "resources/default-config.toml"
 
-
-def generate_config_file(filepath: Path) -> None:
+def generate_config_file(template_file: Path, filepath: Path) -> None:
     """
     Creates a config file from template if it does not currently exist.
 
     Parameters
     ----------
+    template_file: Path
+        Template file to write to file.
     filepath: Path
         File path to save file to.
     """
 
-    with open(CONFIG_TEMPLATE, "r") as template:
+    with open(template_file, "r") as template:
         with open(filepath, "w") as file:
             file.write(template.read())
 

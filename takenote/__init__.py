@@ -1,1 +1,1 @@
-from takenote.cli import cli
+from takenote.main import cli
