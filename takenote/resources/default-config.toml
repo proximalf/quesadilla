@@ -10,6 +10,9 @@
 #
 # ==================== ~ ====================
 
+# Overide for editor environment variable
+# EDITOR=vi
+
 # Set this path
 # Absolute paths for global settings, '~/notes/' is okay.
 # Relative paths are preferred for local settings

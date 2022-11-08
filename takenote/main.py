@@ -108,7 +108,7 @@ def cli(
     title = title_from_format(settings["FORMAT"]["title"], title)
 
     if note is None:
-        note = click.edit()
+        note = click.edit(editor=settings["EDITOR"])
 
     if template is not None:
         template_dir = app_dir / settings["TEMPLATES_DIR"]

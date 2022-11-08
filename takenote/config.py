@@ -6,6 +6,7 @@ validators = [
     Validator("SAVE_PATH_NOTES", must_exist=True, default="./"),
     Validator("VERBOSITY_LEVEL", must_exist=True, default=1),
     Validator("TEMPLATES_DIR", must_exist=True, default="./templates"),
+    Validator("EDITOR", must_exist=True, default=None),
 ]
 
 
