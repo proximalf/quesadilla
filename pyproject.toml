@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "takenote"
-version = "4.1.0"
+version = "4.1.1"
 description = "Note taking terminal app, for integration with obsidian."
 authors = ["proximalf <proximalfuture@gmail.com>"]
 license = "MIT"
@@ -41,7 +41,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "4.1.0"
+version = "4.1.1"
 version_files = [
    "pyproject.toml:version"
 ]
