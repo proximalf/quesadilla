@@ -125,7 +125,10 @@ def cli(
     output.level = verbose if verbose != 0 else settings["VERBOSITY_LEVEL"]
     output.echo("Take note!", {"fg": "magenta"}, level=0)
 
-    if ctx.invoked_subcommand is None:
+    if ctx.invoked_subcommand is not None:
+        # Pass settings into context object
+        ctx.obj = settings
+    else:
         if custom_path is not None:
             settings["SAVE_PATH_NOTES"] = custom_path
             output.echo(f"Saving to output: {custom_path}", level=3)
@@ -161,8 +164,6 @@ def cli(
         except Exception as e:
             output.echo(f"Error occured:\n{e}", {"fg": "red"}, level=0)
         return 1
-    else:
-        ctx.obj = settings
 
 
 @cli.command("a")
@@ -184,7 +185,7 @@ def cli(
     help="A specifed path to append a note to, takes precedence over defined settings.",
 )
 @click.pass_context
-def append(ctx, append_key: str, note: str, custom_path: Path):
+def append(ctx: click.Context, append_key: str, note: str, custom_path: Path) -> None:
     """
     Append to note.
     """
