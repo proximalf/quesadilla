@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from typing import Optional
 import click
+import pyperclip
 
 from takenote.templates import apply_template, title_from_format
 from takenote.cli import initialise_app_dir, fetch_settings, new_note, append_note, output
@@ -10,6 +11,7 @@ CONFIG_FILE_NAME: str = "takenote-config.toml"
 APP_DIR_NAME: str = ".tn"
 tn_env: Optional[str] = os.environ.get("TN_ENV")
 GLOBAL_DIR: Path = Path(tn_env) if "TN_ENV" in os.environ else Path.home() / APP_DIR_NAME  # type: ignore
+output.echo(f"Using tn_env: {tn_env}", {"fg": "red"}, level=0 if tn_env is not None else 3)
 GLOBAL_CONFIG: Path = GLOBAL_DIR / CONFIG_FILE_NAME
 
 
@@ -55,6 +57,15 @@ CONFIG_TEMPLATE: Path = Path(__file__).parent / "resources/default-config.toml"
     default=None,
     help="Provide a key to apply a corrasponding template to a note.",
 )
+@click.option(
+    "-cb",
+    "--clipboard",
+    "clipboard_flag",
+    type=bool,
+    is_flag=True,
+    default=False,
+    help="Fetch contents from clipboard, must be a string.",
+)
 @click.pass_context
 def cli(
     ctx: click.Context,
@@ -64,6 +75,7 @@ def cli(
     custom_path: Optional[Path] = None,
     verbose: int = 0,
     template: Optional[str] = None,
+    clipboard_flag: bool = False,
 ) -> int:
     """
     Take note CLI program, for those that prefer using the terminal.
@@ -100,6 +112,10 @@ def cli(
             settings["SAVE_PATH_NOTES"] = custom_path
             output.echo(f"Saving to output: {custom_path}", level=3)
 
+        clipboard: Optional[str] = None
+        if clipboard_flag:
+            clipboard = pyperclip.paste()
+
         title = title_from_format(settings["FORMAT"]["title"], title)
 
         if note is None:
@@ -109,7 +125,7 @@ def cli(
             template_dir = app_dir / settings["TEMPLATES_DIR"]
             template_path = template_dir / settings["TEMPLATES"][template]
             output.echo(f"Applying template: {template}", level=3)
-            note = apply_template(template_path, note, title)
+            note = apply_template(template_path, note, title, clipboard)
 
         try:
             if note is None:

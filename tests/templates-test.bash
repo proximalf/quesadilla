@@ -9,7 +9,9 @@ dir=$PWD
 rm $test_dir -r
 mkdir $test_dir
 
-tn "template test" --template new --note "templated note"
+tn -t "template new test" --template new --note "templated note"
+tn -t "template clipboard test" --template link --note "templated note" --clipboard
+
 
 cd $dir
 

@@ -69,7 +69,7 @@ def fetch_template(template_path: Path) -> Template:
         return Template(file.read())
 
 
-def apply_template(template_path: Path, note: str, title: Optional[str]):
+def apply_template(template_path: Path, note: str, title: Optional[str], clipboard: Optional[str]):
     """
     Generate title string from defined format.
 
@@ -77,7 +77,7 @@ def apply_template(template_path: Path, note: str, title: Optional[str]):
         'long', 'short'.
 
     Formatting objects
-        date, title.
+        date, title, clipboard.
 
     Parameters
     ----------
@@ -87,6 +87,8 @@ def apply_template(template_path: Path, note: str, title: Optional[str]):
         Note string.
     title: Optional[str]
         Title string.
+    clipboard: Optional[str]
+        Clipboard string
 
     Returns
     ----------
@@ -95,6 +97,13 @@ def apply_template(template_path: Path, note: str, title: Optional[str]):
     """
     template = fetch_template(template_path)
 
-    note = template.render(date=DateTemplate(), note=note, title=title)
+    template_object = {
+        "clipboard": clipboard if not None else "",
+        "date": DateTemplate(),
+        "note": note,
+        "title": title if not None else "",
+    }
+
+    note = template.render(template_object)
 
     return note

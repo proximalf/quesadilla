@@ -122,7 +122,7 @@ def fetch_settings(global_config: Path, local_config: Path) -> Dict[str, Any]:
         Settings dict, from Dynaconf
     """
     if local_config.exists():
-        output.echo("Using local settings", level=2)
+        output.echo(f"Using local settings: {local_config}", level=2)
         return config_file([global_config, local_config])
     else:
         return config_file([global_config])
