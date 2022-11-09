@@ -18,15 +18,6 @@ packages = [
     { include = "takenote" }
 ]
 
-[tool.semantic_release]
-version_variable = "pyproject.toml:version"
-changelog_file = "changelog.md"
-branch = "main"
-upload_to_pypi = false
-upload_to_release = false
-#build_command = "pip install poetry && poetry build"
-
-
 [tool.poetry.scripts]
 tn = "takenote:cli"
 
@@ -40,12 +31,19 @@ dynaconf = "^3.1.11"
 jinja2 = "^3.1.2"
 
 [tool.poetry.group.dev.dependencies]
-python-semantic-release = "^7.32.2"
 mypy = "^0.990"
+commitizen = "^2.37.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "1.1.0"
+version_files = [
+   "pyproject.toml:version"
+]
 
 [tool.black]
 line-length = 120
