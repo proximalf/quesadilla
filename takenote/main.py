@@ -112,12 +112,14 @@ def cli(
     # Echo if ENV has been set.
     output.echo(f"Using TN_ENV: {tn_env}", {"fg": "red"}, level=0 if tn_env is not None else 3)
 
+    first_time = GLOBAL_DIR.exists()
+
     # Check for local config
     local = Path.cwd() / APP_DIR_NAME
     app_dir = local if not local.exists() and generate_config else GLOBAL_DIR
-    initialise_app_dir(app_dir, CONFIG_FILE_NAME, CONFIG_TEMPLATE, DEFAULT_TEMPLATES_FOLDER)
+    initialise_app_dir(app_dir, CONFIG_FILE_NAME, CONFIG_TEMPLATE, DEFAULT_TEMPLATES_FOLDER, generate_config)
 
-    if generate_config:
+    if generate_config or first_time:
         return 0  # Don't continue after generating config
 
     settings = fetch_settings(GLOBAL_CONFIG, local / CONFIG_FILE_NAME)

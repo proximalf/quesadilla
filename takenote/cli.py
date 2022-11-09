@@ -79,7 +79,13 @@ class Output:
 output = Output()
 
 
-def initialise_app_dir(directory: Path, config_file_name: str, config_template: Path, template_files_dir: Path) -> None:
+def initialise_app_dir(
+    directory: Path,
+    config_file_name: str,
+    config_template: Path,
+    template_files_dir: Path,
+    force_generate: bool = False,
+) -> None:
     """
     Initialise the directory for app.
 
@@ -93,14 +99,16 @@ def initialise_app_dir(directory: Path, config_file_name: str, config_template: 
         Path to template config file.
     template_files_dir: Path
         Path to directory of template files.
+    force_generate: bool
+        Set to true to force generation of app dir.
     """
     directory.mkdir(exist_ok=True)
     config_path = directory / config_file_name
     templates_dir = directory / "templates"
-    if not config_path.exists():
+    if not config_path.exists() or force_generate:
         # Write config
         generate_config_file(config_template, config_path)
-    if not templates_dir.exists():
+    if not templates_dir.exists() or force_generate:
         generate_template_folder(template_files_dir, templates_dir)
 
 
