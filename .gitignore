@@ -10,6 +10,7 @@ dist
 # Ignore dynaconf secret files
 .secrets.*
 
-*/test.tn
+test.tn
+.tn
 
 merge.bash

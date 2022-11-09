@@ -68,6 +68,7 @@ ignore = [
     "D203", # OneBlankLineBeforeClass
     "D205", # BlankLineAfterSummary
     "D212", # MultiLineSummaryFirstLine
+    "D400", # EndsInPeriod
     "D409", # SectionUnderlineMatchesSectionLength
     "D411", # BlankLineBeforeSection
     "D415", # EndsInPunctuation

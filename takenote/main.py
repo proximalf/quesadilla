@@ -18,8 +18,8 @@ DEFAULT_TEMPLATES_FOLDER: Path = Path(__file__).parent / "resources/default-temp
 CONFIG_TEMPLATE: Path = Path(__file__).parent / "resources/default-config.toml"
 
 
-@click.command()
-@click.argument("title", nargs=1, type=str, required=False)
+@click.group(invoke_without_command=True)
+@click.option("-t", "--title", "title", type=str, required=False, default=None, help="Title of note.")
 @click.option(
     "-n",
     "--note",
@@ -27,14 +27,6 @@ CONFIG_TEMPLATE: Path = Path(__file__).parent / "resources/default-config.toml"
     type=str,
     default=None,
     help="Contents of note.",
-)
-@click.option(
-    "-a",
-    "--append",
-    "append_key",
-    type=str,
-    default=None,
-    help="Use a key as defined by APPEND_NOTES in the config file.",
 )
 @click.option(
     "-gc",
@@ -48,6 +40,7 @@ CONFIG_TEMPLATE: Path = Path(__file__).parent / "resources/default-config.toml"
     "-p",
     "--path",
     "custom_path",
+    type=Path,
     default=None,
     help="A specifed path to save a note to, takes precedence over defined settings.",
 )
@@ -55,17 +48,18 @@ CONFIG_TEMPLATE: Path = Path(__file__).parent / "resources/default-config.toml"
     "-v", "--verbose", "verbose", count=True, help="Set the verbosity level. Default is 0 level. Can be set in config."
 )
 @click.option(
-    "-t",
+    "-at",
     "--template",
     "template",
     type=str,
     default=None,
     help="Provide a key to apply a corrasponding template to a note.",
 )
+@click.pass_context
 def cli(
+    ctx: click.Context,
     title: Optional[str] = None,
     note: Optional[str] = None,
-    append_key: Optional[str] = None,
     generate_config: bool = False,
     custom_path: Optional[Path] = None,
     verbose: int = 0,
@@ -86,9 +80,8 @@ def cli(
     tn "Title" -n "Note String"
     tn -n "Note" # Title is auto generated
 
-    tn -a KEY -n "Note String"
+    tn a KEY -n "Note String"
     """
-
     # Check for local config
     local = Path.cwd() / APP_DIR_NAME
     app_dir = local if not local.exists() and generate_config else GLOBAL_DIR
@@ -102,33 +95,79 @@ def cli(
     output.level = verbose if verbose != 0 else settings["VERBOSITY_LEVEL"]
     output.echo("Take note!", {"fg": "magenta"}, level=0)
 
+    if ctx.invoked_subcommand is None:
+        if custom_path is not None:
+            settings["SAVE_PATH_NOTES"] = custom_path
+            output.echo(f"Saving to output: {custom_path}", level=3)
+
+        title = title_from_format(settings["FORMAT"]["title"], title)
+
+        if note is None:
+            note = click.edit(editor=settings["EDITOR"])
+
+        if template is not None and note is not None:
+            template_dir = app_dir / settings["TEMPLATES_DIR"]
+            template_path = template_dir / settings["TEMPLATES"][template]
+            output.echo(f"Applying template: {template}", level=3)
+            note = apply_template(template_path, note, title)
+
+        try:
+            if note is None:
+                output.echo("No note saved!", {"fg": "red"}, level=0)
+                return 1
+            else:
+                new_note(settings, note, title)
+                output.echo("Success!", level=1)
+                return 0
+        except Exception as e:
+            output.echo(f"Error occured:\n{e}", {"fg": "red"}, level=0)
+        return 0
+    else:
+        ctx.obj = settings
+
+
+@cli.command("a")
+@click.argument("append_key", type=str, default=None, required=True)
+@click.option(
+    "-n",
+    "--note",
+    "note",
+    type=str,
+    default=None,
+    help="Contents of note.",
+)
+@click.option(
+    "-p",
+    "--path",
+    "custom_path",
+    type=Path,
+    default=None,
+    help="A specifed path to append a note to, takes precedence over defined settings.",
+)
+@click.pass_context
+def append(ctx, append_key: str, note: str, custom_path: Path):
+    """
+    Append to note.
+    """
+
+    # Get settings from context.
+    settings = ctx.obj
+
     if custom_path is not None:
         settings["SAVE_PATH_NOTES"] = custom_path
         output.echo(f"Saving to output: {custom_path}", level=3)
 
-    title = title_from_format(settings["FORMAT"]["title"], title)
-
     if note is None:
         note = click.edit(editor=settings["EDITOR"])
 
-    if template is not None and note is not None:
-        template_dir = app_dir / settings["TEMPLATES_DIR"]
-        template_path = template_dir / settings["TEMPLATES"][template]
-        output.echo(f"Applying template: {template}", level=3)
-        note = apply_template(template_path, note, title)
-
     try:
         if note is None:
-            output.echo("No note saved!", {"fg": "red"}, level=0)
+            output.echo("Note not appended!", {"fg": "red"}, level=0)
             return 1
         else:
-            if append_key:
-                append_note(settings, append_key, note)
-            else:
-                new_note(settings, note, title)
-
-        output.echo("Success!", level=1)
-        return 0
+            append_note(settings, append_key, note)
+            output.echo("Success!", level=1)
+            return 0
     except Exception as e:
         output.echo(f"Error occured:\n{e}", {"fg": "red"}, level=0)
     return 0
