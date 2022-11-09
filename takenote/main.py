@@ -149,7 +149,7 @@ def cli(
                 output.echo("No note saved!", {"fg": "red"}, level=0)
                 return 1
             else:
-                new_note(settings, note, title)
+                new_note(settings, note, f"{title}.{settings['EXTENSION']}")
                 output.echo("Success!", level=1)
                 return 0
         except Exception as e:

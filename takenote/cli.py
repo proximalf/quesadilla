@@ -3,7 +3,6 @@ from typing import Any, Dict, Optional
 import click
 
 from takenote.config import config_file, generate_config_file
-from takenote.note import append_to_note, create_note
 from takenote.templates import generate_template_folder
 
 
@@ -128,9 +127,9 @@ def fetch_settings(global_config: Path, local_config: Path) -> Dict[str, Any]:
         return config_file([global_config])
 
 
-def new_note(settings: Dict[str, Any], note: str, title: Optional[str] = None) -> None:
+def new_note(settings: Dict[str, Any], note: str, filename: str) -> None:
     """
-    New note function.
+    New note function. Overwrites any note.
 
     Parameters
     ----------
@@ -138,12 +137,14 @@ def new_note(settings: Dict[str, Any], note: str, title: Optional[str] = None) -
         Settings object.
     note: str
         Note string.
-    title: Optional[str]
-        title string.
+    filename: str
+        Filename to save note under.
     """
     # Expand user in case '~' is used.
     output_dir = Path(settings["SAVE_PATH_NOTES"]).expanduser()
-    filepath = create_note(output_dir.absolute(), note, title=title)
+    filepath = output_dir.absolute() / filename
+    with filepath.open("w") as file:
+        file.write(note)
     output.echo(f"Note saved successfully!\n{filepath}", {"fg": "green"}, level=1)
 
 
@@ -164,6 +165,7 @@ def append_note(settings: Dict[str, Any], key: str, note: str) -> None:
     filepath = Path(settings["append_notes"][key]).expanduser()
     if filepath.exists():
         output.echo(f"Appending to note!\n{filepath}", {"fg": "green"}, level=2)
-        append_to_note(filepath, "\n" + note)
+        with filepath.open("a") as file:
+            file.write(note)
     else:
         output.echo(f"File doesn't exist: {filepath}", {"fg": "red"}, level=0)

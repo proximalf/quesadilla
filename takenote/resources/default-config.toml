@@ -6,6 +6,9 @@
 # Overide for editor environment variable
 # EDITOR=vi
 
+# File Extension
+# EXTENSION="md"
+
 # Set this path
 # Absolute paths for global settings, '~/notes/' is okay.
 # Relative paths are preferred for local settings
