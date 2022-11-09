@@ -11,6 +11,8 @@ mkdir $test_dir
 
 tn -t "template new test" --template new --note "templated note"
 tn -t "template clipboard test" --template link --note "templated note" --clipboard
+tn -t "template force editor test" --template link --note "templated note" --clipboard --force-editor
+
 
 
 cd $dir

@@ -66,6 +66,15 @@ CONFIG_TEMPLATE: Path = Path(__file__).parent / "resources/default-config.toml"
     default=False,
     help="Fetch contents from clipboard, must be a string.",
 )
+@click.option(
+    "-f",
+    "--force-editor",
+    "force_editor",
+    type=bool,
+    is_flag=True,
+    default=False,
+    help="Open editor regardless of options.",
+)
 @click.pass_context
 def cli(
     ctx: click.Context,
@@ -76,11 +85,16 @@ def cli(
     verbose: int = 0,
     template: Optional[str] = None,
     clipboard_flag: bool = False,
+    force_editor: bool = False,
 ) -> int:
     """
     Take note CLI program, for those that prefer using the terminal.
     The note has to be wrapped in quotes for single line.
+
     Config file name: takenote-config.toml
+
+    `--force-editor` can be used along side `--note` as the option opens and editor
+    after templates have been applied.
 
     \b
     Example
@@ -126,6 +140,9 @@ def cli(
             template_path = template_dir / settings["TEMPLATES"][template]
             output.echo(f"Applying template: {template}", level=3)
             note = apply_template(template_path, note, title, clipboard)
+
+        if force_editor:
+            click.edit(text=note, editor=settings["EDITOR"])
 
         try:
             if note is None:
