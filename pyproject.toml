@@ -60,23 +60,22 @@ line-length = 120
 select = ["A", "C", "D", "E", "F", "N", "T"]
 ignore = [
     # Docstyle and codestyle
-    "A002",
-    "A003",
-    "D100",
-    "D202",
-    "D203",
-    "D205",
-    "D212",
-    "D400",
-    "D409",
-    "D411",
-    "D415",
+    "A002", # BuiltinArgumentShadowing
+    "A003", # BuiltinAttributeShadowing
+    "D100", # PublicModule
+    "D200", # FitsOnOneLine
+    "D202", # NoBlankLineAfterFunction
+    "D203", # OneBlankLineBeforeClass
+    "D205", # BlankLineAfterSummary
+    "D212", # MultiLineSummaryFirstLine
+    "D409", # SectionUnderlineMatchesSectionLength
+    "D411", # BlankLineBeforeSection
+    "D415", # EndsInPunctuation
 ]
 
 [tool.ruff.per-file-ignores]
 "__init__.py" = ["F401"]
 
 [tool.mypy]
-files = "takenote"
 mypy_path = "takenote"
 ignore_missing_imports = true
