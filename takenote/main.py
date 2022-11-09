@@ -6,15 +6,16 @@ import click
 from takenote.templates import apply_template, title_from_format
 from takenote.cli import initialise_app_dir, fetch_settings, new_note, append_note, output
 
-CONFIG_FILE_NAME = "takenote-config.toml"
-APP_DIR_NAME = ".tn"
-GLOBAL_DIR = Path(os.environ.get("TN_ENV")) if "TN_ENV" in os.environ else Path.home() / APP_DIR_NAME
-GLOBAL_CONFIG = GLOBAL_DIR / CONFIG_FILE_NAME
+CONFIG_FILE_NAME: str = "takenote-config.toml"
+APP_DIR_NAME: str = ".tn"
+tn_env: Optional[str] = os.environ.get("TN_ENV")
+GLOBAL_DIR: Path = Path(tn_env) if "TN_ENV" in os.environ else Path.home() / APP_DIR_NAME  # type: ignore
+GLOBAL_CONFIG: Path = GLOBAL_DIR / CONFIG_FILE_NAME
 
 
 # Config template location.
-DEFAULT_TEMPLATES_FOLDER = Path(__file__).parent / "resources/default-templates"
-CONFIG_TEMPLATE = Path(__file__).parent / "resources/default-config.toml"
+DEFAULT_TEMPLATES_FOLDER: Path = Path(__file__).parent / "resources/default-templates"
+CONFIG_TEMPLATE: Path = Path(__file__).parent / "resources/default-config.toml"
 
 
 @click.command()
@@ -69,7 +70,7 @@ def cli(
     custom_path: Optional[Path] = None,
     verbose: int = 0,
     template: Optional[str] = None,
-) -> None:
+) -> int:
     """
     Take note CLI program, for those that prefer using the terminal.
     The note has to be wrapped in quotes for single line.
@@ -110,7 +111,7 @@ def cli(
     if note is None:
         note = click.edit(editor=settings["EDITOR"])
 
-    if template is not None:
+    if template is not None and note is not None:
         template_dir = app_dir / settings["TEMPLATES_DIR"]
         template_path = template_dir / settings["TEMPLATES"][template]
         output.echo(f"Applying template: {template}", level=3)
@@ -130,6 +131,7 @@ def cli(
         return 0
     except Exception as e:
         output.echo(f"Error occured:\n{e}", {"fg": "red"}, level=0)
+    return 0
 
 
 if __name__ == "__main__":

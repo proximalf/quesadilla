@@ -23,7 +23,7 @@ class Output:
         """Initialises with a set level of 3."""
         self._level = 3
 
-    def echo(self, msg, style: Optional[Dict[str, str]] = None, level: int = 3) -> None:
+    def echo(self, msg, styles: Optional[Dict[str, str]] = None, level: int = 3) -> None:
         """
         Echos msg to output.
 
@@ -38,15 +38,16 @@ class Output:
         ----------
         msg: str
             Message to pass to echo.
-        style: Optional[Dict[str, str]]
+        styles: Optional[Dict[str, str]]
             Dict object representing chosen style.
         level: int
             The level the message is printed as.
         """
         if level <= self._level:
-            if style is not None:
+            if styles is not None:
                 # Unpack style
-                click.secho(msg, **style)
+                # Ignored cause its invalid
+                click.secho(msg, **styles)  # type: ignore
             else:
                 click.echo(msg)
 
@@ -127,7 +128,7 @@ def fetch_settings(global_config: Path, local_config: Path) -> Dict[str, Any]:
         return config_file([global_config])
 
 
-def new_note(settings: Dict[str, Any], note: str, title: str = None) -> None:
+def new_note(settings: Dict[str, Any], note: str, title: Optional[str] = None) -> None:
     """
     New note function.
 
@@ -137,7 +138,7 @@ def new_note(settings: Dict[str, Any], note: str, title: str = None) -> None:
         Settings object.
     note: str
         Note string.
-    title: str
+    title: Optional[str]
         title string.
     """
     # Expand user in case '~' is used.

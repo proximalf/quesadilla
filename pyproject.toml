@@ -41,6 +41,7 @@ jinja2 = "^3.1.2"
 
 [tool.poetry.group.dev.dependencies]
 python-semantic-release = "^7.32.2"
+mypy = "^0.990"
 
 [build-system]
 requires = ["poetry-core"]
@@ -76,3 +77,8 @@ ignore = [
 
 [tool.ruff.per-file-ignores]
 "__init__.py" = ["F401"]
+
+[tool.mypy]
+files = "takenote"
+mypy_path = "takenote"
+ignore_missing_imports = true

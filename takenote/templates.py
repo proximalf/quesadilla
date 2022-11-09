@@ -4,7 +4,7 @@ from jinja2 import Template
 from takenote.core import DateTemplate
 
 
-def title_from_format(format: Dict[str, str], title: Optional[str]):
+def title_from_format(format: Dict[str, str], title: Optional[str]) -> str:
     """
     Generate title string from defined format.
 
@@ -56,7 +56,7 @@ def generate_template_folder(template_folder: Path, dirpath: Path) -> None:
                 file.write(template.read())
 
 
-def fetch_template(template_path: Path) -> str:
+def fetch_template(template_path: Path) -> Template:
     """
     Fetch template to process.
 
@@ -69,7 +69,7 @@ def fetch_template(template_path: Path) -> str:
         return Template(file.read())
 
 
-def apply_template(template_path: Path, note: str, title: str):
+def apply_template(template_path: Path, note: str, title: Optional[str]):
     """
     Generate title string from defined format.
 
