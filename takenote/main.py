@@ -110,9 +110,9 @@ def cli(
     tn a KEY -n "Note String"
     """
     # Echo if ENV has been set.
-    output.echo(f"Using TN_ENV: {tn_env}", {"fg": "red"}, level=0 if tn_env is not None else 3)
+    output.echo(f"TN_ENV: {tn_env}", {"fg": "red"}, level=0 if tn_env is not None else 3)
 
-    first_time = GLOBAL_DIR.exists()
+    first_time = not GLOBAL_DIR.exists()
 
     # Check for local config
     local = Path.cwd() / APP_DIR_NAME

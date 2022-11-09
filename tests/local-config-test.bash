@@ -11,13 +11,18 @@ mkdir $test_dir
 
 cd $test_dir
 echo $PWD
-tn "global settings" -n "Global config"
-tn --generate-config
-tn "generated but not overwritten" -n "Global config"
-echo "SAVE_PATH_NOTES = './'" >> ./.tn/takenote-config.toml
-tn "local settings" -n "Local config"
+tn -t "global settings" -n "Global config" -vvv
+tn --generate-config -vvv
+tn -t "generated but not overwritten" -n "Global config" -vvv
+echo "SAVE_PATH_NOTES = './'" >> .tn/takenote-config.toml
+tn -t "local settings" -n "Local config" -vvv
 
 cd $dir
 
+export TN_ENV=~/dev/take-note/dirty/test-output
+cd $TN_ENV
+tn --generate-config -vvv
 # Clean up ENV
 unset TN_ENV
+
+cd $dir
