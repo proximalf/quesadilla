@@ -139,10 +139,17 @@ def new_note(settings: Dict[str, Any], note: str, filename: str) -> None:
         Note string.
     filename: str
         Filename to save note under.
+
+    Raises
+    ----------
+    FileExistsError
+        File already exists.
     """
     # Expand user in case '~' is used.
     output_dir = Path(settings["SAVE_PATH_NOTES"]).expanduser()
     filepath = output_dir.absolute() / filename
+    if filepath.exists():
+        raise FileExistsError(f"File: {filepath}, already exists, and will be overwritten.")
     with filepath.open("w") as file:
         file.write(note)
     output.echo(f"Note saved successfully!\n{filepath}", {"fg": "green"}, level=1)
