@@ -19,8 +19,8 @@ class Output:
     """
 
     def __init__(self) -> None:
-        """Initialises with a set level of 3."""
-        self._level = 3
+        """Initialises with a set level 0."""
+        self._level = 0
 
     def echo(self, msg, styles: Optional[Dict[str, str]] = None, level: int = 3) -> None:
         """

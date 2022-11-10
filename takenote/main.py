@@ -10,7 +10,10 @@ from takenote.cli import initialise_app_dir, fetch_settings, new_note, append_no
 CONFIG_FILE_NAME: str = "takenote-config.toml"
 APP_DIR_NAME: str = ".tn"
 tn_env: Optional[str] = os.environ.get("TN_ENV")
-GLOBAL_DIR: Path = Path(tn_env) if "TN_ENV" in os.environ else Path.home() / APP_DIR_NAME  # type: ignore
+# Echo if ENV has been set.
+output.echo(f"TN_ENV: {tn_env}", {"fg": "red"}, level=3 if tn_env is None else 0)
+
+GLOBAL_DIR: Path = Path(tn_env) if tn_env is not None else Path.home() / APP_DIR_NAME  # type: ignore
 
 
 GLOBAL_CONFIG: Path = GLOBAL_DIR / CONFIG_FILE_NAME
@@ -109,9 +112,6 @@ def cli(
 
     tn a KEY -n "Note String"
     """
-    # Echo if ENV has been set.
-    output.echo(f"TN_ENV: {tn_env}", {"fg": "red"}, level=0 if tn_env is not None else 3)
-
     first_time = not GLOBAL_DIR.exists()
 
     # Check for local config

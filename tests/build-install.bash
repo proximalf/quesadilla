@@ -12,7 +12,7 @@ tn --help
 
 
 # Build wheel for install.
-poetry build
+poetry build -f wheel
 # Remove version
 # python -m pip uninstall takenote -y
 # Install new one
