@@ -1,3 +1,42 @@
+## 4.1.2 (2022-11-10)
+
+### Fix
+
+- missed files on commit
+
+## 4.1.1 (2022-11-09)
+
+### Fix
+
+- incorrect bool
+- generate config file on flag
+
+## 4.1.0 (2022-11-09)
+
+### Feat
+
+- file extension config option
+- **f**: force editor
+- added clipboard option
+
+### Fix
+
+- extension and other defaults missed
+
+### Refactor
+
+- swap branchs in main if statement for readability
+
+## 4.0.0 (2022-11-09)
+
+### BREAKING CHANGE
+
+- changes how the app is invoked
+
+### Refactor
+
+- groups - append is seperate command
+
 ## 3.0.0 (2022-11-09)
 
 ## v1.1.0 (2022-11-09)
