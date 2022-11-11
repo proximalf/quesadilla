@@ -3,52 +3,47 @@
 #
 # ==================== ~ ====================
 
-# Overide for editor environment variable
+## Overide for editor environment variable
 # EDITOR=vi
 
-# File Extension
+## File Extension
 # EXTENSION="md"
 
-# Set this path
-# Absolute paths for global settings, '~/notes/' is okay.
-# Relative paths are preferred for local settings
+## Set this path
+## Absolute paths for global settings, '~/notes/' is okay.
+## Relative paths are preferred for local settings
 # SAVE_PATH_NOTES = "./"
 
-# Templates directory path, relative to .tn folder or absolute for anywhere else.
+## Templates directory path, relative to .tn folder or absolute for anywhere else.
 # TEMPLATES_DIR = "./templates"
 
-# Formatting
-# Follows the same syntax as templating.
-# Only [date, title] are exposed.
-# [FORMAT]
-# Title has two formatting options, if a file has no title the short one is generated.
-# If note has a title, then you can define how to format the title.
-# title={short = "{{ date.format('%y%m_%d%H%M') }}", long = "{{ date.format('%y%m_%d%H%M') }} - {{ title }}"}
-
-# Verbosity
-# -1 Mute
-# 0 is only important messages
-# 3 is all messages
+## Verbosity
+## -1 Mute
+## 0 Info
+## 3 Debug
 # VERBOSITY_LEVEL = 1
 
-
-# APPEND_NOTES
-# A multi key object that uses key as a shortcut for any path.
-# eg: tn a myfile -n "Append."
-# No defaults, only examples
-# [APPEND_NOTES]
+[APPEND]
+## Appending Notes
+## Append to any notes declared in the config file.
+## An toml object that uses key as a shortcut for a path of a note to append to.
+## No defaults, only examples
 # myfile = "./appendthisfile.md"
-# A format for a file to be appended to
-# daily = "DATE:YYMM"
 
-# Templating
-# Formatting objects
-#   clipboard, date, title, note
+[FORMAT]
+## Formatting
+## Follows the same syntax as templating.
+## Only [date, title] are exposed.
+## Title has two formatting options, if a file has no title the short one is generated.
+## If note has a title, then you can define how to format the title.
+# title={short = "{{ date.format('%y%m_%d%H%M') }}", long = "{{ date.format('%y%m_%d%H%M') }} - {{ title }}"}
+
+[TEMPLATES]
+## Templating
+## Formatting objects [clipboard, date, title, note]
 #
-# Stored in template folder
-# No defaults, only examples
-# [TEMPLATES]
-# new_note = "new-note-.md"
-# daily = "daily-appeneder.md"
+## Stored in template folder
+## No defaults, only examples
+# new_note = "new-note.md"
 # daily_new = "daily-new.md"
-#link = "link-note.md"
+# link = "link-note.md"
