@@ -4,9 +4,9 @@ from jinja2 import Template
 from takenote.core import DateTemplate
 
 
-def title_from_format(format: Dict[str, str], title: Optional[str]) -> str:
+def filename_from_format(format: Dict[str, str], title: Optional[str]) -> str:
     """
-    Generate title string from defined format.
+    Generate filename string from defined format.
 
     Formats covered:
         'long', 'short'.

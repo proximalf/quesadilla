@@ -7,7 +7,7 @@ validators = [
     Validator("EXTENSION", must_exist=True, default="md"),
     Validator("SAVE_PATH_NOTES", must_exist=True, default="./"),
     Validator("TEMPLATES_DIR", must_exist=True, default="./templates"),
-    Validator("FORMAT.title", must_exist=True, default={"long": "{{ title }}", "short": "new-note"}),
+    Validator("FORMAT.filename", must_exist=True, default={"long": "{{ title }}", "short": "new-note"}),
     Validator("VERBOSITY_LEVEL", must_exist=True, default=1),
 ]
 

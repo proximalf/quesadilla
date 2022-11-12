@@ -5,6 +5,8 @@ export TN_ENV=~/dev/take-note/tests/test.tn
 
 rm dirty/test-output/*
 
+tn --help > help.output
+
 tn -t "test note" --note "This is a note"
 
 tn --note "This is a note has no title"

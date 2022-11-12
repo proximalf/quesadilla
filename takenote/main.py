@@ -4,7 +4,7 @@ from typing import Optional
 import click
 import pyperclip
 
-from takenote.templates import apply_template, title_from_format
+from takenote.templates import apply_template, filename_from_format
 from takenote.cli import initialise_app_dir, fetch_settings, new_note, append_note, output
 
 CONFIG_FILE_NAME: str = "takenote-config.toml"
@@ -97,18 +97,20 @@ def cli(
 
     Configuration files are stored in folder ".tn", local options overwrite globals.
 
+    Filename of note is generated from config.
+
     `--force-editor` can be used along side `--note` as the option opens an editor
     after templates have been applied.
 
     \b
     Example
     ----------
-    tn -gc # Generate config in local directory
+    tn --generate-local/-lc # Generate config in local directory
 
-    tn "Title" # Opens your favourite editor and saves note on close
+    tn --title/-t "Title" # Opens your favourite editor and saves note on close
 
-    tn "Title" -n "Note String"
-    tn -n "Note" # Title is auto generated
+    tn --title/-t "Title" --note/-n "Note String"
+    tn --note/-n "Note" # Filename is generated from config
 
     tn a KEY -n "Note String"
     """
@@ -139,7 +141,7 @@ def cli(
         if clipboard_flag:
             clipboard = pyperclip.paste()
 
-        title = title_from_format(settings["FORMAT"]["title"], title)
+        filename = filename_from_format(settings["FORMAT"]["filename"], title)
 
         if note is None:
             note = click.edit(editor=settings["EDITOR"])
@@ -148,7 +150,7 @@ def cli(
             template_dir = app_dir / settings["TEMPLATES_DIR"]
             template_path = template_dir / settings["TEMPLATES"][template]
             output.echo(f"Applying template: {template}", level=3)
-            note = apply_template(template_path, note, title, clipboard)
+            note = apply_template(template_path, note, filename, clipboard)
 
         if force_editor:
             click.edit(text=note, editor=settings["EDITOR"])
@@ -158,7 +160,7 @@ def cli(
                 output.echo("No note saved!", {"fg": "red"}, level=0)
                 return 1
             else:
-                new_note(settings, note, f"{title}.{settings['EXTENSION']}")
+                new_note(settings, note, f"{filename}.{settings['EXTENSION']}")
                 output.echo("Success!", level=1)
                 return 0
         except FileExistsError as e:

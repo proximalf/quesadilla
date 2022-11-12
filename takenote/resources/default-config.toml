@@ -36,7 +36,7 @@
 ## Only [date, title] are exposed.
 ## Title has two formatting options, if a file has no title the short one is generated.
 ## If note has a title, then you can define how to format the title.
-# title={short = "{{ date.format('%y%m_%d%H%M') }}", long = "{{ date.format('%y%m_%d%H%M') }} - {{ title }}"}
+# filename = {short = "{{ date.format('%y%m_%d%H%M') }}", long = "{{ date.format('%y%m_%d%H%M') }} - {{ title }}"}
 
 [TEMPLATES]
 ## Templating
