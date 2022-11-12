@@ -32,15 +32,15 @@ CONFIG_TEMPLATE: Path = Path(__file__).parent / "resources/default-config.toml"
     "note",
     type=str,
     default=None,
-    help="Contents of note.",
+    help="Use the given string as the contents of the note.",
 )
 @click.option(
-    "-gc",
-    "--generate-config",
-    "generate_config",
+    "-lc",
+    "--generate-local",
+    "generate_local_config",
     is_flag=True,
     default=False,
-    help=f"Use to generate a local config file, name is {CONFIG_FILE_NAME}",
+    help=f"Use to generate a local config folder, {APP_DIR_NAME}",
 )
 @click.option(
     "-p",
@@ -59,7 +59,7 @@ CONFIG_TEMPLATE: Path = Path(__file__).parent / "resources/default-config.toml"
     "template",
     type=str,
     default=None,
-    help="Provide a key to apply a corrasponding template to a note.",
+    help="Provide a key to apply a corresponding template to a note.",
 )
 @click.option(
     "-cb",
@@ -71,20 +71,20 @@ CONFIG_TEMPLATE: Path = Path(__file__).parent / "resources/default-config.toml"
     help="Fetch contents from clipboard, must be a string.",
 )
 @click.option(
-    "-f",
-    "--force-editor",
+    "-e",
+    "--edit",
     "force_editor",
     type=bool,
     is_flag=True,
     default=False,
-    help="Open editor regardless of options.",
+    help="Open editor - options are applied and can be edited after.",
 )
 @click.pass_context
 def cli(
     ctx: click.Context,
     title: Optional[str] = None,
     note: Optional[str] = None,
-    generate_config: bool = False,
+    generate_local_config: bool = False,
     custom_path: Optional[Path] = None,
     verbose: int = 0,
     template: Optional[str] = None,
@@ -95,9 +95,9 @@ def cli(
     Take note CLI program, for those that prefer using the terminal.
     The note has to be wrapped in quotes for single line.
 
-    Config file name: takenote-config.toml
+    Configuration files are stored in folder ".tn", local options overwrite globals.
 
-    `--force-editor` can be used along side `--note` as the option opens and editor
+    `--force-editor` can be used along side `--note` as the option opens an editor
     after templates have been applied.
 
     \b
@@ -116,10 +116,10 @@ def cli(
 
     # Check for local config
     local = Path.cwd() / APP_DIR_NAME
-    app_dir = local if not local.exists() and generate_config else GLOBAL_DIR
-    initialise_app_dir(app_dir, CONFIG_FILE_NAME, CONFIG_TEMPLATE, DEFAULT_TEMPLATES_FOLDER, generate_config)
+    app_dir = local if not local.exists() and generate_local_config else GLOBAL_DIR
+    initialise_app_dir(app_dir, CONFIG_FILE_NAME, CONFIG_TEMPLATE, DEFAULT_TEMPLATES_FOLDER, generate_local_config)
 
-    if generate_config or first_time:
+    if generate_local_config or first_time:
         return 0  # Don't continue after generating config
 
     settings = fetch_settings(GLOBAL_CONFIG, local / CONFIG_FILE_NAME)
@@ -128,7 +128,7 @@ def cli(
     output.echo("Take note!", {"fg": "magenta"}, level=0)
 
     if ctx.invoked_subcommand is not None:
-        # Pass settings into context object
+        # Pass settings into context object for other commands
         ctx.obj = settings
     else:
         if custom_path is not None:
@@ -176,7 +176,7 @@ def cli(
     "note",
     type=str,
     default=None,
-    help="Contents of note.",
+    help="Use the given string as the contents of the note.",
 )
 @click.option(
     "-p",
@@ -189,7 +189,15 @@ def cli(
 @click.pass_context
 def append(ctx: click.Context, append_key: str, note: str, custom_path: Path) -> None:
     """
-    Append to note.
+    Append to note. Keys for notes to be appended to are set in the config file.
+    Option "--note/-n" is provided and has same function.
+
+    \b
+    Example
+    ----------
+    tn a KEY # Opens editor
+
+    tn a KEY --path "./path/of/appendable/note.md"
     """
 
     # Get settings from context.

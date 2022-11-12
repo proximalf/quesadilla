@@ -72,7 +72,7 @@ title={short = "{{ date.format('%y%m_%d%H%M') }}", long = "{{ date.format('%y%m_
 ```
 
 Currently only two keys are supported:
-- date : `{{ date.format() }}`
+- date : `{{ date.format(format_str) }}`
     Inserts date where this placeholder is.
     No default is provided. I like to use: `"%y%m_%d%H%M"`
 - title : `{{ title }}`

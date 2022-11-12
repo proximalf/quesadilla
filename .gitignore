@@ -7,10 +7,7 @@ __pycache__/
 .mypy_cache
 dist
 
-# Ignore dynaconf secret files
-.secrets.*
 
 test.tn
-.tn
 
 merge.bash
