@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 import click
 
 from takenote.config import config_file, generate_config_file
@@ -22,7 +22,7 @@ class Output:
         """Initialises with a set level 0."""
         self._level = 0
 
-    def echo(self, msg, styles: Optional[Dict[str, str]] = None, level: int = 3) -> None:
+    def echo(self, msg, level: int = 3, **kwargs) -> None:
         """
         Echos msg to output.
 
@@ -37,18 +37,13 @@ class Output:
         ----------
         msg: str
             Message to pass to echo.
-        styles: Optional[Dict[str, str]]
-            Dict object representing chosen style.
         level: int
             The level the message is printed as.
+        kwargs: Dict[str, Any]
+            Kwargs to pass to echo
         """
         if level <= self._level:
-            if styles is not None:
-                # Unpack style
-                # Ignored cause its invalid
-                click.secho(msg, **styles)  # type: ignore
-            else:
-                click.echo(msg)
+            click.secho(msg, **kwargs)  # type: ignore
 
     @property
     def level(self) -> int:
@@ -160,7 +155,7 @@ def new_note(settings: Dict[str, Any], note: str, filename: str) -> None:
         raise FileExistsError(f"File: {filepath}, already exists, and will be overwritten.")
     with filepath.open("w") as file:
         file.write(note)
-    output.echo(f"Note saved successfully!\n{filepath}", {"fg": "green"}, level=1)
+    output.echo(f"Note saved successfully!\n{filepath}", level=1, fg="green")
 
 
 def append_note(settings: Dict[str, Any], key: str, note: str) -> None:
@@ -179,8 +174,8 @@ def append_note(settings: Dict[str, Any], key: str, note: str) -> None:
     # Get key from settings, expand user in case '~' is used
     filepath = Path(settings["append_notes"][key]).expanduser()
     if filepath.exists():
-        output.echo(f"Appending to note!\n{filepath}", {"fg": "green"}, level=2)
+        output.echo(f"Appending to note!\n{filepath}", level=2, fg="green")
         with filepath.open("a") as file:
             file.write(note)
     else:
-        output.echo(f"File doesn't exist: {filepath}", {"fg": "red"}, level=0)
+        output.echo(f"File doesn't exist: {filepath}", level=0, fg="red")

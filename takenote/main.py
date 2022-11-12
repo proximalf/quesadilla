@@ -11,7 +11,7 @@ CONFIG_FILE_NAME: str = "takenote-config.toml"
 APP_DIR_NAME: str = ".tn"
 tn_env: Optional[str] = os.environ.get("TN_ENV")
 # Echo if ENV has been set.
-output.echo(f"TN_ENV: {tn_env}", {"fg": "red"}, level=3 if tn_env is None else 0)
+output.echo(f"TN_ENV: {tn_env}", level=3 if tn_env is None else 0, fg="red")
 
 GLOBAL_DIR: Path = Path(tn_env) if tn_env is not None else Path.home() / APP_DIR_NAME  # type: ignore
 
@@ -127,7 +127,7 @@ def cli(
     settings = fetch_settings(GLOBAL_CONFIG, local / CONFIG_FILE_NAME)
 
     output.level = verbose if verbose != 0 else settings["VERBOSITY_LEVEL"]
-    output.echo("Take note!", {"fg": "magenta"}, level=0)
+    output.echo("Take note!", level=0, fg="magenta")
 
     if ctx.invoked_subcommand is not None:
         # Pass settings into context object for other commands
@@ -157,7 +157,7 @@ def cli(
 
         try:
             if note is None:
-                output.echo("No note saved!", {"fg": "red"}, level=0)
+                output.echo("No note saved!", level=0, fg="red")
                 return 1
             else:
                 new_note(settings, note, f"{filename}.{settings['EXTENSION']}")
@@ -166,7 +166,7 @@ def cli(
         except FileExistsError as e:
             output.echo(f"File already exists: {e}")
         except Exception as e:
-            output.echo(f"Error occured:\n{e}", {"fg": "red"}, level=0)
+            output.echo(f"Error occured:\n{e}", level=0, fg="red")
         return 1
 
 
@@ -214,14 +214,14 @@ def append(ctx: click.Context, append_key: str, note: str, custom_path: Path) ->
 
     try:
         if note is None:
-            output.echo("Note not appended!", {"fg": "red"}, level=0)
+            output.echo("Note not appended!", level=0, fg="red")
             return 1
         else:
             append_note(settings, append_key, note)
             output.echo("Success!", level=1)
             return 0
     except Exception as e:
-        output.echo(f"Error occured:\n{e}", {"fg": "red"}, level=0)
+        output.echo(f"Error occured:\n{e}", level=0, fg="red")
     return 0
 
 
