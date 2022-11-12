@@ -4,7 +4,7 @@ from typing import Optional
 import click
 import pyperclip
 
-from takenote.templates import apply_template, filename_from_format
+from takenote.template import apply_template, filename_from_format
 from takenote.cli import initialise_app_dir, fetch_settings, new_note, append_note, output
 
 CONFIG_FILE_NAME: str = "takenote-config.toml"
@@ -141,7 +141,8 @@ def cli(
         if clipboard_flag:
             clipboard = pyperclip.paste()
 
-        filename = filename_from_format(settings["FORMAT"]["filename"], title)
+        filename_format = "short" if title is None else "long"
+        filename = filename_from_format(settings["FORMAT"]["filename"][filename_format], title)
 
         if note is None:
             note = click.edit(editor=settings["EDITOR"])

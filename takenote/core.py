@@ -1,54 +1,39 @@
-from datetime import datetime
-from typing import Optional
+from pathlib import Path
 
 
-class DateTemplate:
-    """Template object."""
-
-    def __init__(self, time: Optional[datetime] = None) -> None:
-        """
-        Time is an optional arg, as class will initialise with current time if no arg
-        is provided.
-
-        Parameters
-        ----------
-        time: Optional[datetime]
-            A datetime object of a specified date.
-        """
-        self.time = datetime.now() if time is None else time
-
-    def format(self, format: str) -> str:
-        """
-        Returns a datetime string in the format described.
-        Queries the current time.
-        `format= "%y%m_%d%H%M"`
-
-        Parameters
-        ----------
-        format: str
-            A format to generate datetime strings.
-
-        Returns
-        ----------
-        str
-            Datetime object as string of format.
-        """
-        return self.time.strftime(format)
-
-
-def zettelkasten(format: str = "%y%m_%d%H%M") -> str:
+def generate_template_folder(template_folder: Path, dirpath: Path) -> None:
     """
-    Returns a datetime string in the format of a zettelkasten title.
-    Queries the current time.
+    Generates template folder from example, and saves the templates
+    under dirpath.
 
     Parameters
     ----------
-    format: str
-        A format to generate datetime strings.
-
-    Returns
-    ----------
-    str
-        Datetime object as string of format.
+    template_folder: Path
+        Template folder to generate new folder from
+    dirpath: Path
+        Path to folder to be templated.
     """
-    return datetime.now().strftime(format)
+    if not dirpath.exists():
+        dirpath.mkdir(parents=True)
+
+    for template_file in template_folder.glob("*"):
+        with open(template_file, "r") as template:
+            with open(dirpath / template_file.name, "w") as file:
+                file.write(template.read())
+
+
+def generate_config_file(template_file: Path, filepath: Path) -> None:
+    """
+    Creates a config file from template if it does not currently exist.
+
+    Parameters
+    ----------
+    template_file: Path
+        Template file to write to file.
+    filepath: Path
+        File path to save file to.
+    """
+
+    with open(template_file, "r") as template:
+        with open(filepath, "w") as file:
+            file.write(template.read())

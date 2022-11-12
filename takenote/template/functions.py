@@ -1,23 +1,20 @@
 from pathlib import Path
 from typing import Dict, Optional
 from jinja2 import Template
-from takenote.core import DateTemplate
+from takenote.template.objects import DateTemplate
 
 
 def filename_from_format(format: Dict[str, str], title: Optional[str]) -> str:
     """
     Generate filename string from defined format.
 
-    Formats covered:
-        'long', 'short'.
-
     Formatting objects
         date, title.
 
     Parameters
     ----------
-    format: Dict[str, str]
-        Dict object representting formats as described.
+    format:
+        Jinja string representting format as described.
     title: Optional[str]
         Title string.
 
@@ -27,33 +24,8 @@ def filename_from_format(format: Dict[str, str], title: Optional[str]) -> str:
         Processed template string.
     """
 
-    if title is None:
-        tp = Template(format["short"])
-        return tp.render(date=DateTemplate())
-    else:
-        tp = Template(format["long"])
-        return tp.render(date=DateTemplate(), title=title)
-
-
-def generate_template_folder(template_folder: Path, dirpath: Path) -> None:
-    """
-    Generates template folder from example, and saves the templates
-    under dirpath.
-
-    Parameters
-    ----------
-    template_folder: Path
-        Template folder to generate new folder from
-    dirpath: Path
-        Path to folder to be templated.
-    """
-    if not dirpath.exists():
-        dirpath.mkdir(parents=True)
-
-    for template_file in template_folder.glob("*"):
-        with open(template_file, "r") as template:
-            with open(dirpath / template_file.name, "w") as file:
-                file.write(template.read())
+    tp = Template(format)
+    return tp.render(date=DateTemplate(), title=title)
 
 
 def fetch_template(template_path: Path) -> Template:

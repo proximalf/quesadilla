@@ -2,8 +2,8 @@ from pathlib import Path
 from typing import Any, Dict
 import click
 
-from takenote.config import config_file, generate_config_file
-from takenote.templates import generate_template_folder
+from takenote.config import config_file
+from takenote.core import generate_template_folder, generate_config_file
 
 
 class Output:
