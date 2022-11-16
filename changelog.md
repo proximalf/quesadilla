@@ -1,3 +1,22 @@
+## 4.1.3 (2022-11-12)
+
+### Fix
+
+- tn_env echos twice
+- fix changelog
+
+### Refactor
+
+- **templates**: move templating into its own module
+- changed output.echo to kwargs
+- moved validators out of global scope
+
+## 4.1.2 (2022-11-10)
+
+### Fix
+
+- missed files on commit
+
 ## 4.1.1 (2022-11-09)
 
 ### Fix
