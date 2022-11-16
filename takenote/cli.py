@@ -101,7 +101,9 @@ def initialise_app_dir(
     templates_dir = directory / "templates"
     if not config_path.exists() or force_generate:
         # Write config
-        generate_config_file(config_template, config_path)
+        from takenote.__version__ import __version__
+
+        generate_config_file(config_template, config_path, __version__)
     if not templates_dir.exists() or force_generate:
         generate_template_folder(template_files_dir, templates_dir)
 

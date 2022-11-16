@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from takenote.template.functions import fetch_template
+
 
 def generate_template_folder(template_folder: Path, dirpath: Path) -> None:
     """
@@ -22,7 +24,7 @@ def generate_template_folder(template_folder: Path, dirpath: Path) -> None:
                 file.write(template.read())
 
 
-def generate_config_file(template_file: Path, filepath: Path) -> None:
+def generate_config_file(template_file: Path, filepath: Path, version: str) -> None:
     """
     Creates a config file from template if it does not currently exist.
 
@@ -32,8 +34,9 @@ def generate_config_file(template_file: Path, filepath: Path) -> None:
         Template file to write to file.
     filepath: Path
         File path to save file to.
+    version: str
+        String of app version to add to config.
     """
-
-    with open(template_file, "r") as template:
-        with open(filepath, "w") as file:
-            file.write(template.read())
+    template = fetch_template(template_file)
+    with open(filepath, "w") as file:
+        file.write(template.render(version=version))

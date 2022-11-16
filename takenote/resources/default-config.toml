@@ -1,7 +1,11 @@
 # ==================== Take Note - config ====================
 # Defaults are commented out, uncomment and edit, they are defined in the code.
 #
+#           {{ version }}
+#
 # ==================== ~ ====================
+
+
 
 ## Overide for editor environment variable
 # EDITOR=vi
