@@ -68,7 +68,6 @@ class Output:
             int to set level as.
         """
         self._level = level
-        self.echo(f"Verbosity level set: {level}", level=3)
 
 
 output = Output()
