@@ -5,7 +5,7 @@ import click
 import pyperclip
 
 from takenote.template import apply_template, filename_from_format
-from takenote.cli import initialise_app_dir, fetch_settings, new_note, append_note, output
+from takenote.core import initialise_app_dir, fetch_settings, new_note, append_note, output
 
 CONFIG_FILE_NAME: str = "takenote-config.toml"
 APP_DIR_NAME: str = ".tn"
