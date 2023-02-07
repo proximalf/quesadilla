@@ -145,7 +145,7 @@ def cli(
         filename = filename_from_format(settings["FORMAT"]["filename"][filename_format], title)
 
         if note is None:
-            note = click.edit(editor=settings["EDITOR"])
+            note = click.edit(editor=settings["EDITOR"], extension=settings["EXTENSION"])
 
         if template is not None and note is not None:
             template_dir = app_dir / settings["TEMPLATES_DIR"]
@@ -154,7 +154,7 @@ def cli(
             note = apply_template(template_path, note, filename, clipboard)
 
         if force_editor:
-            click.edit(text=note, editor=settings["EDITOR"])
+            click.edit(text=note, editor=settings["EDITOR"], extension=settings["EXTENSION"])
 
         try:
             if note is None:
@@ -211,7 +211,7 @@ def append(ctx: click.Context, append_key: str, note: str, custom_path: Path) ->
         output.echo(f"Saving to output: {custom_path}", level=3)
 
     if note is None:
-        note = click.edit(editor=settings["EDITOR"])
+        note = click.edit(editor=settings["EDITOR"], extension=settings["EXTENSION"])
 
     try:
         if note is None:
