@@ -5,6 +5,7 @@ __pycache__/
 *.egg-info/
 .ruff_cache
 .mypy_cache
+poetry.lock
 dist
 
 
