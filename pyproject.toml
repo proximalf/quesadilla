@@ -53,16 +53,8 @@ line-length = 120
 
 [tool.ruff]
 line-length = 120
-# A: flake8-annotations
-# C: flake8-comprehensions
-# D: pydocstyle
-# E: pycodestyle
-# F: pyflakes
-# N: pep8-naming
-# T: flake8-print
 select = ["A", "C", "D", "E", "F", "N", "T"]
 ignore = [
-    # Docstyle and codestyle
     "A002", # BuiltinArgumentShadowing
     "A003", # BuiltinAttributeShadowing
     "D100", # PublicModule
