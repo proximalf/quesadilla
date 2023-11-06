@@ -41,7 +41,10 @@ def filename_from_format(format: Dict[str, str], title: Optional[str]) -> str:
     """
 
     template = Template(format)
-    return template.render(date=DateTemplate(), title=title)
+    try:
+        return template.render(date=DateTemplate(), title=title)
+    except TypeError:
+        raise Exception(f"Error with template for file title: {title} format: {format}")
 
 
 def fetch_template(template_path: Optional[Path]) -> Template:
@@ -81,4 +84,7 @@ def apply_template(template_path: Optional[Path], note: Note, addtional_data: Op
         Processed template string.
     """
     template = fetch_template(template_path)
-    return template.render(note=note, data=addtional_data)
+    try:
+        return template.render(note=note, data=addtional_data)
+    except TypeError:
+        raise Exception(f"Error with template applying template, path: {template_path}")
