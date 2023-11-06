@@ -12,3 +12,5 @@ dist
 test.tn
 
 merge.bash
+
+*test*.md
