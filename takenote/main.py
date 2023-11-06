@@ -4,8 +4,10 @@ from typing import Optional
 import click
 import pyperclip
 
-from takenote.template import apply_template, filename_from_format
-from takenote.core import initialise_app_dir, fetch_settings, new_note, append_note, output
+from .note.template import apply_template, filename_from_format
+from .cli import initialise_app_dir, output
+from .config import fetch_settings
+from .core import new_note, append_note
 
 CONFIG_FILE_NAME: str = "takenote-config.toml"
 APP_DIR_NAME: str = ".tn"

@@ -1,6 +1,28 @@
 from pathlib import Path
-from typing import List
+from typing import Any, Dict, List
 from dynaconf import Dynaconf, Validator
+
+
+def fetch_settings(global_config: Path, local_config: Path) -> Dict[str, Any]:
+    """
+    Fetches settings. local config is checked to exist, else uses global.
+
+    Parameters
+    ----------
+    global_config: Path
+        Global config file path, loaded before local.
+    local_config: Path
+        File path to local config file.
+
+    Returns
+    ----------
+    Dict[str, Any]
+        Settings dict, from Dynaconf
+    """
+    if local_config.exists():
+        return config_file([global_config, local_config])
+    else:
+        return config_file([global_config])
 
 
 def config_file(filepaths: List[Path]) -> Dynaconf:
