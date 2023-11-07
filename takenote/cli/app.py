@@ -77,7 +77,7 @@ class App:
     def write_to_file(self) -> None:
         """Write note to file."""
         save_dir = Path(self.settings["SAVE_PATH_NOTES"]).expanduser()
-        path = save_dir / self.filename
+        path = save_dir / f"{self.filename}.{self.settings['FILE_TYPE']}"
         self.echo(f"Writing note to: {path}", level=1, fg="green")
         write_note(path, self.note, self.template_path, self.data)
 
