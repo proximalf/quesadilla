@@ -91,7 +91,7 @@ def cli(
     force_editor: bool = False,
 ) -> int:
     r"""
-    Take note CLI program, quick depositing of notes for those that prefer using the terminal.
+    Take note CLI, quick depositing of notes for those that prefer using the terminal.
 
     Configuration files are stored in folder ".tn", local options overwrite globals.
     Config directory path can be overwritten by setting the TN_ENV value.
@@ -146,7 +146,7 @@ def cli(
         write_and_close(app)
 
 
-@cli.command("t", short_help="Templating command")
+@cli.command("t", short_help="Templates using keys.")
 @click.pass_context
 @click.argument("template_key", type=str, default=None, required=False)
 @click.option(
@@ -160,7 +160,7 @@ def cli(
 )
 def template(ctx: click.Context, template_key: Optional[str] = None, print_keys: bool = False) -> None:
     """
-    Templating cli function. Refer to config file and default templates for more information.
+    Templating command. Refer to config file and default templates for more information.
 
     Example
     ----------
@@ -190,3 +190,47 @@ def template(ctx: click.Context, template_key: Optional[str] = None, print_keys:
     app.open_editor(True)
 
     write_and_close(app)
+
+
+@cli.command("config", short_help="Command to open config files.")
+@click.pass_context
+@click.option(
+    "-l",
+    "--local",
+    "open_local",
+    type=bool,
+    is_flag=True,
+    default=False,
+    help="Open local config file, if none exists this is generated.",
+)
+@click.option(
+    "-g",
+    "--global",
+    "open_global",
+    type=bool,
+    is_flag=True,
+    default=False,
+    help="Open global config file.",
+)
+def config(ctx: click.Context, open_local: bool = False, open_global: bool = False):
+    """
+    Config command, used to generate and edit local and global config files.
+    """
+    app: App = ctx.obj
+
+    # Check for local config
+    local = Path.cwd() / APP_DIR_NAME
+    local_config = local / CONFIG_FILE_NAME
+
+    if open_local:
+        app_dir = local if not local.exists() else GLOBAL_DIR
+        initialise_app_dir(app_dir, CONFIG_FILE_NAME, CONFIG_TEMPLATE, DEFAULT_TEMPLATES_FOLDER, True)
+
+    app.echo("Editing Config!")
+
+    if local_config.exists():
+        app.echo(f"Local: {local_config}")
+        click.edit(filename=local_config)
+    elif open_global:
+        app.echo(f"Global: {GLOBAL_CONFIG}")
+        click.edit(filename=GLOBAL_CONFIG)
