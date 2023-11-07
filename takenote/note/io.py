@@ -1,19 +1,25 @@
+from loguru import logger
 import yaml
 from pathlib import Path
 from typing import Dict, Optional
 from markdown_it import MarkdownIt
 from mdit_py_plugins.front_matter import front_matter_plugin
 from mdit_py_plugins.footnote import footnote_plugin
+from jinja2.exceptions import UndefinedError
 
 from .template import apply_template
 from .note import Note
+
+
+class TemplateError(Exception):
+    """Jinja Template Error"""
 
 
 def write_note(
     path: Path, note: Note, template_path: Optional[Path] = None, addtional_data: Optional[Dict[str, str]] = None
 ) -> None:
     """
-    Writes a note using the template provided, else uses default.
+    Write a note using the template provided, else uses default.
 
     Parameters
     ----------
@@ -26,12 +32,18 @@ def write_note(
     addtional_data: Optional[Dict[str, str]]
         Any addtional data to be passed to a `data` object for acess in jinja templates.
     """
-    path.write_text(apply_template(template_path, note, addtional_data))
+    try:
+        path.write_text(apply_template(template_path, note, addtional_data))
+    except UndefinedError as e:
+        errmsg = f"Please check template {template_path} for errors, refer to log for debug information."
+        logger.error(errmsg)
+        logger.exception(e)
+        raise TemplateError(errmsg)
 
 
 def read_markdown(path: Path, ignore_title: bool = False) -> Note:
     """
-    Reads markdown note, assuming my format, which uses yaml.
+    Read markdown note, assuming my format, which uses yaml.
     """
     md = (
         MarkdownIt("commonmark", {"breaks": True, "html": False})

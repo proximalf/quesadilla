@@ -68,6 +68,7 @@ ignore = [
     "D409", # SectionUnderlineMatchesSectionLength
     "D411", # BlankLineBeforeSection
     "D415", # EndsInPunctuation
+    "D416", # Section Name should end with a colon
     #"D301", # Use r""" if any backslashes in a docstring
     "D104", # Missing docstring in public package
 ]

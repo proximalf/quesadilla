@@ -1,11 +1,26 @@
+import os
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 from dynaconf import Dynaconf, Validator
+from loguru import logger
+
+CONFIG_FILE_NAME: str = "takenote-config.toml"
+APP_DIR_NAME: str = ".tn"
+tn_env: Optional[str] = os.environ.get("TN_ENV")
+logger.info(f"TN_ENV: {tn_env}", level=3 if tn_env is None else 0, fg="red")
+
+GLOBAL_DIR: Path = Path(tn_env) if tn_env is not None else Path.home() / APP_DIR_NAME  # type: ignore
+
+GLOBAL_CONFIG: Path = GLOBAL_DIR / CONFIG_FILE_NAME
+
+# Config template location.
+DEFAULT_TEMPLATES_FOLDER: Path = Path(__file__).parent / "resources/default-templates"
+CONFIG_TEMPLATE: Path = Path(__file__).parent / "resources/default-config.toml"
 
 
 def fetch_settings(global_config: Path, local_config: Path) -> Dict[str, Any]:
     """
-    Fetches settings. local config is checked to exist, else uses global.
+    Fetch settings. local config is checked to exist, else uses global.
 
     Parameters
     ----------
@@ -27,7 +42,7 @@ def fetch_settings(global_config: Path, local_config: Path) -> Dict[str, Any]:
 
 def config_file(filepaths: List[Path]) -> Dynaconf:
     """
-    Returns an existing config file. Requires a list of files for input.
+    Return an existing config file. Requires a list of files for input.
     Files are overwritten based on order in list.
 
     Parameters
@@ -48,6 +63,8 @@ def config_file(filepaths: List[Path]) -> Dynaconf:
         Validator("TEMPLATES_DIR", must_exist=True, default="./templates"),
         Validator("FORMAT.filename", must_exist=True, default={"long": "{{ title }}", "short": "new-note"}),
         Validator("VERBOSITY_LEVEL", must_exist=True, default=1),
+        Validator("DEBUG", must_exist=True, default=False),
+        Validator("DEFAULT_TEMPLATE", must_exist=True, default=None),
     ]
 
     settings = Dynaconf(

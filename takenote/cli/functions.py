@@ -1,7 +1,7 @@
 from pathlib import Path
 
+
 from ..__version__ import __version__
-from ..note.template.functions import fetch_template
 
 
 def initialise_app_dir(
@@ -39,7 +39,7 @@ def initialise_app_dir(
 
 def generate_template_folder(template_folder: Path, dirpath: Path) -> None:
     """
-    Generates template folder from example, and saves the templates
+    Generate template folder from example, and saves the templates
     under dirpath.
 
     Parameters
@@ -60,7 +60,7 @@ def generate_template_folder(template_folder: Path, dirpath: Path) -> None:
 
 def generate_config_file(template_file: Path, filepath: Path, version: str) -> None:
     """
-    Creates a config file from template if it does not currently exist.
+    Create a config file from template if it does not currently exist.
 
     Parameters
     ----------
@@ -71,6 +71,5 @@ def generate_config_file(template_file: Path, filepath: Path, version: str) -> N
     version: str
         String of app version to add to config.
     """
-    template = fetch_template(template_file)
     with open(filepath, "w") as file:
-        file.write(template.render(version=version))
+        file.write(template_file.read_text())
