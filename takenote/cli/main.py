@@ -105,6 +105,12 @@ def cli(
     `tn -t "Title of a normal note"`
         Note will use basic template and an editor will open.
 
+    `tn t new`
+        Basic template note, opens editor.
+
+    `tn -t "Title of templated file" t new`
+        Setting the title of a note that uses the `new` template, refer to config.
+
     """
     # Check for local config
     local = Path.cwd() / APP_DIR_NAME
@@ -140,5 +146,47 @@ def cli(
         write_and_close(app)
 
 
-if __name__ == "__main__":
-    cli()
+@cli.command("t", short_help="Templating command")
+@click.pass_context
+@click.argument("template_key", type=str, default=None, required=False)
+@click.option(
+    "-k",
+    "--keys",
+    "print_keys",
+    type=bool,
+    is_flag=True,
+    default=False,
+    help="Prints template keys availible, refer to config file to modify keys.",
+)
+def template(ctx: click.Context, template_key: Optional[str] = None, print_keys: bool = False) -> None:
+    """
+    Templating cli function. Refer to config file and default templates for more information.
+
+    Example
+    ----------
+    `tn t -k`
+        Will print keys set in config file
+    `tn -t "Template" t new`
+        Will create a note using new template and give it a title.
+    """
+    app: App = ctx.obj
+    if print_keys:
+        app.print_template_keys()
+        return
+
+    if template_key is None:
+        app.echo("Error: No template key provided!", fg="")
+        return
+
+    try:
+        app.set_template(template_key)
+        app.echo(f"Applying template: {template_key}", level=2)
+    except FileNotFoundError:
+        app.echo("ERROR", fg="red")
+        app.echo(f"Template {template_key} cannot be applied as file cannot be found.")
+        app.echo("Please refer to config file.")
+        return
+    # Always open after applying template.
+    app.open_editor(True)
+
+    write_and_close(app)
