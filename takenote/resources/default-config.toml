@@ -1,53 +1,60 @@
-# ==================== Take Note - config ====================
-# Defaults are commented out, uncomment and edit, they are defined in the code.
-#
-#
-# ==================== ~ ====================
+## ==================== Take Note - config ====================
+## Defaults are commented out, uncomment and edit, they are defined in the code.
+##
+## Uncomment whole file to overwrite all defaults.
+## ==================== ~ ====================
 
 
 
 ## Overide for editor environment variable
-# EDITOR=vi
+#EDITOR=vi
 
 ## File Extension
-# EXTENSION="md"
+#EXTENSION="md"
 
 ## Set this path
 ## Absolute paths for global settings, '~/notes/' is okay.
 ## Relative paths are preferred for local settings
-# SAVE_PATH_NOTES = "./"
+#SAVE_PATH_NOTES = "./"
 
 ## Templates directory path, relative to .tn folder or absolute for anywhere else.
-# TEMPLATES_DIR = "./templates"
+#TEMPLATES_DIR = "./templates"
 
 ## Verbosity
 ## -1 Mute
 ## 0 Info
 ## 3 Debug
-# VERBOSITY_LEVEL = 1
+#VERBOSITY_LEVEL = 1
 
-[APPEND]
+#[APPEND]
 ## Appending Notes
 ## Append to any notes declared in the config file.
 ## An toml object that uses key as a shortcut for a path of a note to append to.
 ## No defaults, only examples
-# myfile = "./appendthisfile.md"
+#myfile = "./appendthisfile.md"
 
-[FORMAT]
+#[FORMAT]
 ## Formatting
 ## Follows the same syntax as templating.
 ## Only [date, title] are exposed.
 ## Title has two formatting options, if a file has no title the short one is generated.
 ## If note has a title, then you can define how to format the title.
-# [FORMAT.FILENAME]
-# short = "{{ date.format('%y%m_%d%H%M') }}"
-# long = "{{ date.format('%y%m_%d%H%M') }} - {{ title }}"
+#[FORMAT.FILENAME]
+#short = "{{ date.format('%y%m_%d%H%M') }}"
+#long = "{{ date.format('%y%m_%d%H%M') }} - {{ title }}"
 
-[TEMPLATES]
+#[TEMPLATES]
 ## Templating
 ## Formatting objects [clipboard, date, title, note]
 #
 ## Stored in template folder
 ## No defaults, only examples
-# new_note = "new-note.md"
-# link = "link-note.md"
+#new_note = "new-note.md"
+#link = "link-note.md"
+
+#[LOGGING]
+#log_file = "~/.take-note.log"
+#level = "INFO"
+#write_to_stderr = true
+#write_to_stdout = false
+#debug = false
