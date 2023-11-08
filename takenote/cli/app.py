@@ -1,15 +1,19 @@
 from pathlib import Path
 from typing import Any, Dict, Optional
 import click
-
-from takenote.note.io import write_note
+from loguru import logger
 
 from ..note.note import Note
-from ..note.template import filename_from_format
+from ..note.io import write_note
+from ..note.template import filename_from_format, apply_template
 
 
 class App:
-    """Main App class, initialises app using settings."""
+    """
+    Main App class, initialises app using settings.
+
+    Data holds reference to a Dict[str, Any] that is passed to the templates when the note is written.
+    """
 
     def __init__(self, settings: Dict[str, Any], debug: bool = False) -> None:
         """
@@ -70,6 +74,7 @@ class App:
         """Set the template by referencing key to relavent template path as defined in the config file"""
         template_dir = self.settings["APP_DIR"] / self.settings["TEMPLATES_DIR"]
         relative_path = self.settings["TEMPLATES"].get(template_key)
+
         if relative_path is None:
             raise FileNotFoundError(f"Template {template_key} doesn't exist, please chck {template_dir}")
         self.template_path = template_dir / relative_path
@@ -84,7 +89,20 @@ class App:
     def print_template_keys(self) -> None:
         """Print template keys, as KEY:FILENAME."""
         self.echo("Printing template keys (KEY : FILENAME):")
+
         if not isinstance(self.settings["TEMPLATES"], dict):
             self.echo("No Templates found...", fg="red")
+            return
+
         for key, value in self.settings["TEMPLATES"].items():
             self.echo(f"\t- {key} : {value}", fg="yellow")
+
+    def print_contents(self) -> None:
+        """Print contents of note, attempts to apply template."""
+        try:
+            msg = apply_template(self.template_path, self.note, self.data)
+        except Exception as e:
+            msg = self.note.content
+            self.echo("Error occurred when applying template, refer to log.")
+            logger.exception(e)
+        self.echo(msg)

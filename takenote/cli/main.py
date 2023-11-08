@@ -27,9 +27,11 @@ def write_and_close(app: App) -> None:
             app.echo("Success!", level=1)
     except FileExistsError as e:
         app.echo(f"File already exists: {e}", level=0, fg="red")
+        app.print_contents()
     except Exception as e:
         logger.exception(e)
         app.echo(f"Error occured:\n{e}", level=0, fg="red")
+        app.print_contents()
 
 
 CONTEXT_SETTINGS: Dict[str, Any] = {"help_option_names": ["-h", "--help"]}
