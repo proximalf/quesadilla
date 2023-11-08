@@ -1,4 +1,6 @@
 from pathlib import Path
+from typing import Union
+import sys
 from typing import Any, Dict, Optional
 import click
 from loguru import logger
@@ -13,6 +15,7 @@ from ..config import (
     DEFAULT_TEMPLATES_FOLDER,
     CONFIG_TEMPLATE,
     GLOBAL_DIR,
+    TN_ENV,
 )
 from .app import App
 
@@ -32,6 +35,34 @@ def write_and_close(app: App) -> None:
         logger.exception(e)
         app.echo(f"Error occured:\n{e}", level=0, fg="red")
         app.print_contents()
+
+
+def initialise_logging(
+    log_file: Union[str, Path],
+    level: str = "INFO",
+    write_to_stderr: bool = True,
+    write_to_stdout: bool = False,
+    debug: bool = False,
+):
+    """
+    Initialise loguru logger with file and stderr and stdout as per their respective flags
+    """
+    settings = {
+        "colorize": True,
+        "level": level,
+    }
+    if debug:
+        settings["backtrace"] = True
+        settings["diagnose"] = True
+
+    if write_to_stderr:
+        logger.add(sys.stderr, **settings)
+    if write_to_stdout:
+        logger.add(sys.stdout, **settings)
+
+    # write because no point keeping old file, personal preferance.
+    # String from config
+    logger.add(Path(log_file).expanduser(), mode="w")
 
 
 CONTEXT_SETTINGS: Dict[str, Any] = {"help_option_names": ["-h", "--help"]}
@@ -126,17 +157,26 @@ def cli(
     settings = fetch_settings(GLOBAL_CONFIG, local / CONFIG_FILE_NAME)
     settings["APP_DIR"] = app_dir
 
+    initialise_logging(**settings["LOGGING"])
+
     app = App(settings, debug)
     app.filename = title
     app.editor = not no_edit
 
+    if TN_ENV:
+        # Output the set env variable "TN_ENV"
+        app.echo(f"TN_ENV: {TN_ENV}", level=1, fg="red")
+        logger.info(f"TN_ENV: {TN_ENV}")
+
     app.echo("Take note!", level=0, fg="magenta")
 
     if custom_path is not None:
+        # Overwrite save path
         app.settings["SAVE_PATH_NOTES"] = custom_path
         app.echo(f"Saving to output: {custom_path}", level=1)
 
     if clipboard_flag:
+        # Grab clipboard data
         app.data["clipboard"] = pyperclip.paste()
 
     if ctx.invoked_subcommand is not None:

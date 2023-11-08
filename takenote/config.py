@@ -2,15 +2,13 @@ import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 from dynaconf import Dynaconf, Validator
-from loguru import logger
 
 CONFIG_FILE_NAME: str = "takenote-config.toml"
 APP_DIR_NAME: str = ".tn"
-tn_env: Optional[str] = os.environ.get("TN_ENV")
-logger.info(f"TN_ENV: {tn_env}", level=3 if tn_env is None else 0, fg="red")
 
-GLOBAL_DIR: Path = Path(tn_env) if tn_env is not None else Path.home() / APP_DIR_NAME  # type: ignore
+TN_ENV: Optional[str] = os.environ.get("TN_ENV")
 
+GLOBAL_DIR: Path = Path(TN_ENV) if TN_ENV is not None else Path.home() / APP_DIR_NAME  # type: ignore
 GLOBAL_CONFIG: Path = GLOBAL_DIR / CONFIG_FILE_NAME
 
 # Config template location.
@@ -55,6 +53,13 @@ def config_file(filepaths: List[Path]) -> Dynaconf:
     Dict[str, Any]
         Settings object from Dynaconf.
     """
+    log_defaults = {
+        "log_file": "~/.take-note.log",
+        "level": "INFO",
+        "write_to_stderr": True,
+        "write_to_stdout": False,
+        "debug": False,
+    }
 
     validators = [
         Validator("EDITOR", must_exist=True, default=None),
@@ -65,6 +70,7 @@ def config_file(filepaths: List[Path]) -> Dynaconf:
         Validator("VERBOSITY_LEVEL", must_exist=True, default=1),
         Validator("DEBUG", must_exist=True, default=False),
         Validator("DEFAULT_TEMPLATE", must_exist=True, default=None),
+        Validator("LOGGING", must_exist=True, default=log_defaults),
     ]
 
     settings = Dynaconf(
