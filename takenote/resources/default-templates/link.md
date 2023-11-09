@@ -5,4 +5,4 @@
 
 {{ note.date.as_format("%A %d %B %Y %H:%M:%S") }}
 
-[{{ note }}]({{ clipboard }})
+[{{ note }}]({{ data.clipboard }})

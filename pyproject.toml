@@ -45,8 +45,9 @@ name = "cz_conventional_commits"
 version = "5.0.0"
 changelog_file = "changelog.md"
 version_files = [
-   "pyproject.toml:version",
-   "takenote/__version__.py"
+    "pyproject.toml:version",
+    "takenote/__version__.py",
+    "takenote/resources/default-config.toml:version"
 ]
 
 [tool.black]
