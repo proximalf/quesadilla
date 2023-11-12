@@ -58,4 +58,4 @@ class Note:
 
     def __str__(self):
         """Return String Note Component"""
-        return "---\n" f"{self.front_matter}\n" "---\n" f"{self.title}\n" f"{self.date}\n" f"{self.content}\n"
+        return "---\n" f"{self.yaml}\n" "---\n" f"{self.title}\n" f"{self.date}\n" f"{self.content}\n"
