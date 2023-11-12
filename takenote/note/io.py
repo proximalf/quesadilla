@@ -15,7 +15,7 @@ class TemplateError(Exception):
     """Jinja Template Error"""
 
 
-def write_note(
+def write_note_with_template(
     path: Path, note: Note, template_path: Optional[Path] = None, addtional_data: Optional[Dict[str, str]] = None
 ) -> None:
     """
@@ -36,6 +36,26 @@ def write_note(
         path.write_text(apply_template(template_path, note, addtional_data))
     except UndefinedError as e:
         errmsg = f"Please check template {template_path} for errors, refer to log for debug information."
+        logger.error(errmsg)
+        logger.exception(e)
+        raise TemplateError(errmsg)
+
+
+def write_note(path: Path, note: Note) -> None:
+    """
+    Write Note object to file, no formating.
+
+    Parameters
+    ----------
+    path: Path
+        Path to save note under.
+    note: Note
+        Note to save.
+    """
+    try:
+        path.write_text(str(note))
+    except Exception as e:
+        errmsg = f"Error writing note to file: {path}!"
         logger.error(errmsg)
         logger.exception(e)
         raise TemplateError(errmsg)
@@ -71,7 +91,7 @@ def read_markdown(path: Path, ignore_title: bool = False) -> Note:
         front_matter = yaml.safe_load(front_matter)
 
     content = "".join(path.open().readlines()[content::])
-    date = front_matter["creation_date"] if front_matter is not None else None
+    date = front_matter.get("creation_date") if front_matter is not None else None
 
     return Note(
         front_matter=front_matter,

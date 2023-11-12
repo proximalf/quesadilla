@@ -4,7 +4,7 @@ import click
 from loguru import logger
 
 from ..note.note import Note
-from ..note.io import write_note
+from ..note.io import write_note_with_template
 from ..note.template import filename_from_format, apply_template
 
 
@@ -84,7 +84,7 @@ class App:
         save_dir = Path(self.settings["SAVE_PATH_NOTES"]).expanduser()
         path = save_dir / f"{self.filename}.{self.settings['EXTENSION']}"
         self.echo(f"Writing note to: {path}", level=1, fg="green")
-        write_note(path, self.note, self.template_path, self.data)
+        write_note_with_template(path, self.note, self.template_path, self.data)
 
     def print_template_keys(self) -> None:
         """Print template keys, as KEY:FILENAME."""

@@ -48,10 +48,14 @@ class Note:
 
     @date.setter
     def date(self, value: datetime) -> None:
-        """Sets internal datetime object"""
+        """Set internal datetime object"""
         self._date = value
 
     @property
     def datetime(self) -> datetime:
         """Return datetime object"""
         return self._date
+
+    def __str__(self):
+        """Return String Note Component"""
+        return "---\n" f"{self.front_matter}\n" "---\n" f"{self.title}\n" f"{self.date}\n" f"{self.content}\n"
