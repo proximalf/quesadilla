@@ -1,3 +1,61 @@
+## 6.0.0 (2023-11-15)
+
+### Feat
+
+- **templating**: add iso format
+- **io**: add str method to note
+
+### Fix
+
+- **note**: print yaml
+
+## 5.1.0 (2023-11-09)
+
+### Feat
+
+- **config**: update default config
+- **logging**: add loguru to main
+- **bug**: but feature, print output if app crashes
+
+### Fix
+
+- **app**: dumb copy paste from a different app
+
+## 5.0.0 (2023-11-07)
+
+### BREAKING CHANGE
+
+- most functionality remains the same, but few features chopped out and will be reimplement, all templates will need fixing
+
+### Feat
+
+- **cli**: added config command
+- **cli**: added templating command
+- **cli**: refactored and broke most functionality
+
+### Fix
+
+- **app**: file extensions being missed
+- **template**: debug message is rubbish on template
+
+### Refactor
+
+- **core**: refactor before implement
+- **api**: rewrite to be a lib with cli wrapper
+- merge cli with core
+
+## 4.2.0 (2022-11-17)
+
+### Feat
+
+- version in config file template
+
+## 4.1.4 (2022-11-16)
+
+### Fix
+
+- removed excess print statement
+
 ## 4.1.3 (2022-11-12)
 
 ### Fix
