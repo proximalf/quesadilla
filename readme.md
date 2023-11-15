@@ -3,77 +3,64 @@
 Very customisable note taking program that operates in the terminal, using your favorite editor.
 
 ## Use
+
 *As default notes are saved in the directory the program is run.*
 
-```console
-tn --help
+`tn -t "Title of a normal note"`
+Note will use basic template and an editor will open.
 
-tn # This opens your favourite editor and saves to choosen directory.
+`tn t new`
+Basic template note, opens editor.
 
-tn --note/-n "One line note."
+`tn -t "Title of templated file" t new`
+Setting the title of a note that uses the `new` template, refer to config.
 
-tn --title/-t "Quick Note"
+### Config
 
-tn --path/-p "./path to save to/"
-```
+There is a global config file, and a local config this can be generated with the command.
 
-### Configation
-There is a global config file, and a local config this can be generated with the command. `tn -gc | tn --generate-config`.
+Global config: `tn config -g/--global`
+Path: `~/.tn/takenote-config.toml`
 
-Global config: `~/.tn/takenote-config.toml`
-Local config: `$PWD/.tn/takenote-config.toml`
-
-### Appending
-
-```console
-tn a KEY # Opens editor
-```
-Append to any notes declared in the config file.
-An toml object that uses key as a shortcut for a path of a note to append to.
-
-**Config**
-```toml
-[APPEND]
-long = "./appendthisfile.md"
-```
-
+Local config: `tn config -l/--local`
+Path: `$PWD/.tn/takenote-config.toml`
 
 ### Templates
+
 [Jinja](https://jinja.palletsprojects.com/en/3.1.x/templates/) is the templating engine used.
 Within the config file, there is the section `[TEMPLATES]`, and the keys to templates should be defined here.
 
-`tn -at TEMPLATE` *at stands for apply template - this is nicer to type than tp and t is reserved for title*
-`tn --template TEMPLATE`
+`tn t TEMPLATE`
+`tn t -k/--keys`
 
 **Config**
-```toml
-[TEMPLATES]
-new_note = "new-note.md"
-```
-
 Currently only a few keys are supported for templates.
-- date : `{{ date.format() }}`
-    Inserts date where this placeholder is.
-    No default is provided. I like to use: `"%y%m_%d%H%M"`
-- title : `{{ title }}`
-    Inserts title where this placeholder is.
-- note : `{{ note }}`
-    Inserts body of note where this placeholder is.
 
-## Title Formatting
+- date : `{{ note.date.as_format() }}`
+  Inserts date where this placeholder is.
+  No default is provided. I like to use: `"%y%m_%d%H%M"`
+- title : `{{ note.title }}`
+  Inserts title where this placeholder is.
+- note : `{{ note }}`
+  Inserts body of note where this placeholder is.
+
+#### Title Formatting
+
 Saving a note with out a title is not possible, and so there are two options for title / filename conventions. Within the config file, there is the section `[FORMAT]`, the `short` and `long` title can be defined here.
 
 Just like the templates, [Jinja](https://jinja.palletsprojects.com/en/3.1.x/templates/) is used here.
 
 **Config**
+
 ```toml
 [FORMAT]
 title={short = "{{ date.format('%y%m_%d%H%M') }}", long = "{{ date.format('%y%m_%d%H%M') }} - {{ title }}"}
 ```
 
 Currently only two keys are supported:
-- date : `{{ date.format(format_str) }}`
-    Inserts date where this placeholder is.
-    No default is provided. I like to use: `"%y%m_%d%H%M"`
+
+- date : `{{ date.as_format(format_str) }}`
+  Inserts date where this placeholder is.
+  No default is provided. I like to use: `"%y%m_%d%H%M"`
 - title : `{{ title }}`
-    Inserts title where this placeholder is.
+  Inserts title where this placeholder is.

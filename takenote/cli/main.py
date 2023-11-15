@@ -273,6 +273,6 @@ def config(ctx: click.Context, open_local: bool = False, open_global: bool = Fal
     if local_config.exists():
         app.echo(f"Local: {local_config}")
         click.edit(filename=local_config)
-    elif open_global:
+    elif open_global or not local_config:
         app.echo(f"Global: {GLOBAL_CONFIG}")
         click.edit(filename=GLOBAL_CONFIG)

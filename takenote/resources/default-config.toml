@@ -8,7 +8,7 @@
 version = "5.1.0"
 
 ## Overide for editor environment variable
-#EDITOR=vi
+#EDITOR=nano
 
 ## File Extension
 #EXTENSION="md"
