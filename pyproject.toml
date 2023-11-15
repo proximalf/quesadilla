@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "takenote"
-version = "5.1.0"
+version = "5.2.0"
 description = "Note taking terminal app, for integration with obsidian."
 authors = ["proximalf <proximalfuture@gmail.com>"]
 license = "MIT"
@@ -22,7 +22,7 @@ packages = [
 tn = "takenote:cli"
 
 [tool.poetry.urls]
-repository = "https://github.com/proximalf/ubiquitous-octo-disco"
+repository = "https://github.com/proximalf/quesadilla"
 
 [tool.poetry.dependencies]
 python = "^3.7"
@@ -42,8 +42,9 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "5.1.0"
+version = "5.2.0"
 changelog_file = "changelog.md"
+update_changelog_on_bump = true
 version_files = [
     "pyproject.toml:version",
     "takenote/__version__.py",
