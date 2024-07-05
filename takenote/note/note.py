@@ -39,6 +39,8 @@ class Note:
     @property
     def yaml(self) -> str:
         """Returns a YAML String"""
+        if self.front_matter is None:
+            return ""
         return yaml.dump(self.front_matter, sort_keys=True)
 
     @property
