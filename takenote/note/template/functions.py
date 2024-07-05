@@ -1,8 +1,8 @@
+from datetime import datetime
 from pathlib import Path
 from typing import Dict, Optional
 from jinja2 import Template
 from ..note import Note
-from .objects import DateTemplate
 
 DEFAULT_TEMPLATE_STRING = """
 ---
@@ -14,7 +14,7 @@ DEFAULT_TEMPLATE_STRING = """
 
 {% endif %}
 
-{{ note.date.as_format("%A %d %B %Y %H:%M:%S") }}
+{{ datetime.now().strftime("%A %d %B %Y %H:%M:%S") }}
 
 {{ note.content }}
 """
@@ -42,7 +42,7 @@ def filename_from_format(format: Dict[str, str], title: Optional[str]) -> str:
 
     template = Template(format)
     try:
-        return template.render(date=DateTemplate(), title=title)
+        return template.render(datetime=datetime, title=title)
     except TypeError:
         raise Exception(f"Error with template for file title: {title} format: {format}")
 
@@ -85,6 +85,6 @@ def apply_template(template_path: Optional[Path], note: Note, addtional_data: Op
     """
     template = fetch_template(template_path)
     try:
-        return template.render(note=note, data=addtional_data)
+        return template.render(note=note, datetime=datetime, **addtional_data)
     except TypeError:
         raise Exception(f"Error with template applying template, path: {template_path}")
