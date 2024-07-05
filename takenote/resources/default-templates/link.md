@@ -5,4 +5,4 @@
 
 {{ datetime.now().strftime("%A %d %B %Y %H:%M:%S") }}
 
-[{{ note }}]({{ data.clipboard }})
+[{{ link }}]({{ clipboard }})
