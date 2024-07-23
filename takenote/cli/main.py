@@ -125,7 +125,7 @@ def cli(
     force_editor: bool = False,
     link_name: Optional[str] = None,
 ) -> int:
-    r"""
+    """
     Take note CLI, quick depositing of notes for those that prefer using the terminal.
 
     Configuration files are stored in folder ".tn", local options overwrite globals.
