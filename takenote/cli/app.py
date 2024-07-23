@@ -67,7 +67,11 @@ class App:
     def filename(self, title: Optional[str] = None) -> None:
         """Set filename."""
         filename_format = "short" if title is None else "long"
-        self._filename = filename_from_format(self.settings["FORMAT"]["filename"][filename_format], title)
+        try:
+            self._filename = filename_from_format(self.settings["FORMAT"]["filename"][filename_format], title)
+        except Exception as e:
+            logger.error("Error occured with setting file name, double check config.")
+            logger.debug(e)
         self.note.title = title
 
     def set_template(self, template_key: str) -> None:

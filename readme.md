@@ -36,10 +36,10 @@ Within the config file, there is the section `[TEMPLATES]`, and the keys to temp
 **Config**
 Currently only a few keys are supported for templates.
 
-- date : `{{ note.date.as_format() }}`
+- datetime : `{{ datetime.now().strftime("%y%m_%d%H%M") }}`
   Inserts date where this placeholder is.
   No default is provided. I like to use: `"%y%m_%d%H%M"`
-- title : `{{ note.title }}`
+- title : `{{ title }}`
   Inserts title where this placeholder is.
 - note : `{{ note }}`
   Inserts body of note where this placeholder is.
@@ -50,17 +50,8 @@ Saving a note with out a title is not possible, and so there are two options for
 
 Just like the templates, [Jinja](https://jinja.palletsprojects.com/en/3.1.x/templates/) is used here.
 
-**Config**
-
 ```toml
-[FORMAT]
-title={short = "{{ date.format('%y%m_%d%H%M') }}", long = "{{ date.format('%y%m_%d%H%M') }} - {{ title }}"}
+[FORMAT.FILENAME]
+short = "{{ datetime.now().strftime('%y%m_%d%H%M') }}"
+long = "{{ datetime.now().strftime('%y%m_%d%H%M') }} - {{ title }}"
 ```
-
-Currently only two keys are supported:
-
-- date : `{{ date.as_format(format_str) }}`
-  Inserts date where this placeholder is.
-  No default is provided. I like to use: `"%y%m_%d%H%M"`
-- title : `{{ title }}`
-  Inserts title where this placeholder is.
