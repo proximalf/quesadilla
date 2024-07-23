@@ -1,4 +1,5 @@
-from .cli.app import cli
+import sys
+from .cli.main import cli
 
 if __name__ == "__main__":
-    cli()
+    sys.exit(cli())

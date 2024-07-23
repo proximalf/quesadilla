@@ -113,6 +113,7 @@ CONTEXT_SETTINGS: Dict[str, Any] = {"help_option_names": ["-h", "--help"]}
     default=False,
     help="Opens editor.",
 )
+@click.option("-l", "--link", "link_name", default=None, type=str, help="An arg to use in templating.")
 @click.pass_context
 def cli(
     ctx: click.Context,
@@ -122,6 +123,7 @@ def cli(
     custom_path: Optional[Path] = None,
     no_edit: bool = False,
     force_editor: bool = False,
+    link_name: Optional[str] = None,
 ) -> int:
     r"""
     Take note CLI, quick depositing of notes for those that prefer using the terminal.
@@ -178,6 +180,9 @@ def cli(
     if clipboard_flag:
         # Grab clipboard data
         app.data["clipboard"] = pyperclip.paste()
+
+    if link_name is not None:
+        app.data["link"] = link_name
 
     if ctx.invoked_subcommand is not None:
         # Pass settings into context object for other commands

@@ -1,8 +1,6 @@
 import yaml
-from typing import Dict, Optional
+from typing import Any, Dict, Optional
 from datetime import datetime
-
-from .template.objects import DateTemplate
 
 
 class Note:
@@ -31,10 +29,10 @@ class Note:
             Datetime object, can be None, if so format_datetime returns result from `datetime.now()`
 
         """
-        self.front_matter = front_matter
-        self.title = title
-        self.content = content
-        self._date = date
+        self.front_matter: Dict[str, Any] = front_matter
+        self.title: Optional[str] = title
+        self.content: Optional[str] = content
+        self.date: datetime = date
 
     @property
     def yaml(self) -> str:
@@ -42,21 +40,6 @@ class Note:
         if self.front_matter is None:
             return ""
         return yaml.dump(self.front_matter, sort_keys=True)
-
-    @property
-    def date(self) -> DateTemplate:
-        """Returns a DateTemplate object for use in templates"""
-        return DateTemplate(self._date)
-
-    @date.setter
-    def date(self, value: datetime) -> None:
-        """Set internal datetime object"""
-        self._date = value
-
-    @property
-    def datetime(self) -> datetime:
-        """Return datetime object"""
-        return self._date
 
     def __str__(self):
         """Return String Note Component"""
