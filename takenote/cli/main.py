@@ -123,7 +123,7 @@ def cli(
     no_edit: bool = False,
     force_editor: bool = False,
 ) -> int:
-    r"""
+    """
     Take note CLI, quick depositing of notes for those that prefer using the terminal.
 
     Configuration files are stored in folder ".tn", local options overwrite globals.
